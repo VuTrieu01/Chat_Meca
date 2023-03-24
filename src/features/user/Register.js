@@ -4,10 +4,14 @@ import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 import { BiShow, BiHide } from "react-icons/bi";
 
-export default function Login() {
+export default function Register() {
   const [isVisible, setVisible] = useState(false);
+  const [passwordConfirm, setPasswordConfirm] = useState(false);
   const handleToggle = () => {
     setVisible(!isVisible);
+  };
+  const handPasswordConfirm = () => {
+    setPasswordConfirm(!passwordConfirm);
   };
   return (
     <div className="h-screen">
@@ -26,7 +30,7 @@ export default function Login() {
                 Chào mừng bạn đến với chat meca
               </p>
               <p className="text-base mb-5">
-                Vui lòng đăng nhập tài khoản của bạn
+                Vui lòng điền đầy đủ thông tin của bạn
               </p>
               <div className="flex flex-col justify-center items-center">
                 <TextField
@@ -42,19 +46,24 @@ export default function Login() {
                 >
                   {isVisible ? <BiHide /> : <BiShow />}
                 </TextField>
+                <TextField
+                  type={!passwordConfirm ? "password" : "text"}
+                  placeholder="Nhập lại mật khẩu"
+                  sx="w-80 md:w-full mb-5"
+                  onClick={handPasswordConfirm}
+                >
+                  {passwordConfirm ? <BiHide /> : <BiShow />}
+                </TextField>
                 <Button sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
-                  Đăng nhập
+                  Đăng ký
                 </Button>
               </div>
 
-              <div className="mb-4 flex justify-center">
-                <a href="">Quên mật khẩu?</a>
-              </div>
               <p className="text-sm font-semibold text-center">
-                Không có tài khoản?
-                <Link to="register">
+                Đã có tài khoản?
+                <Link to="/">
                   <Button sx="ml-2 mb-2 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
-                    Đăng ký
+                    Đăng nhập
                   </Button>
                 </Link>
               </p>

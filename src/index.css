@@ -8,3 +8,8 @@
     @apply bg-white;
   }
 }
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
