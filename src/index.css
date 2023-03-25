@@ -13,3 +13,18 @@ input::-ms-reveal,
 input::-ms-clear {
   display: none;
 }
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgb(22 163 74);
+    border-radius: 100vh;
+  }
+}

@@ -42,9 +42,11 @@ export default function Login() {
                 >
                   {isVisible ? <BiHide /> : <BiShow />}
                 </TextField>
-                <Button sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
-                  Đăng nhập
-                </Button>
+                <Link to="/" className="w-full">
+                  <Button sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
+                    Đăng nhập
+                  </Button>
+                </Link>
               </div>
 
               <div className="mb-4 flex justify-center">
@@ -52,7 +54,7 @@ export default function Login() {
               </div>
               <p className="text-sm font-semibold text-center">
                 Không có tài khoản?
-                <Link to="register">
+                <Link to="/register">
                   <Button sx="ml-2 mb-2 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
                     Đăng ký
                   </Button>
