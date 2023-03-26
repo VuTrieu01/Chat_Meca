@@ -1,14 +1,14 @@
 import React from "react";
 import ChatList from "./ChatList";
-import ChatView from "./ChatView";
+import Conversations from "./Conversations";
 import ConversationInfo from "./ConversationInfo";
 
 export default function Chat() {
   return (
-    <div className="h-screen">
+    <div className="h-screen w-full">
       <div className="h-full w-full flex">
         <ChatList />
-        <ChatView />
+        <Conversations />
         <ConversationInfo />
       </div>
     </div>

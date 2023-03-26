@@ -26,9 +26,7 @@ export default function ChatItem(props) {
             )}
           </div>
           <div className="flex flex-col items-end">
-            <div className="font-bold text-gray-400 font-[Roboto] text-sm">
-              4:30 PM
-            </div>
+            <div className="text-gray-400 text-sm">4:30 PM</div>
             {props.newChat ? (
               <div className="flex items-center justify-center h-5 w-5 p-2 bg-red-600 text-white font-bold rounded-full text-xs">
                 1

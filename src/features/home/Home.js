@@ -4,8 +4,8 @@ import Chat from "../chat/Chat";
 
 export default function Home() {
   return (
-    <div className="h-screen">
-      <div className="h-full flex">
+    <div className="h-screen w-full">
+      <div className="h-full w-full flex">
         <Sidebar />
         <Chat />
       </div>
