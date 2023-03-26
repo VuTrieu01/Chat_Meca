@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Avatar from "../../components/Avatar";
 import Ping from "../../components/Ping";
 import { IoCall, IoSend } from "react-icons/io5";
@@ -7,9 +7,9 @@ import { HiDotsCircleHorizontal } from "react-icons/hi";
 import { BiImageAdd } from "react-icons/bi";
 import Scrollbar from "../../components/Scrollbar";
 import ChatContent from "./ChatContent";
-import TextField from "../../components/TextField";
 
 export default function Conversations() {
+  const messageEl = useRef(null);
   return (
     <div className="h-screen w-full">
       <div className="h-full w-full bg-gray-100">
@@ -30,7 +30,7 @@ export default function Conversations() {
             <HiDotsCircleHorizontal className="cursor-pointer" />
           </div>
         </div>
-        <Scrollbar>
+        <Scrollbar messageEl={messageEl}>
           <ChatContent type={true} />
           <ChatContent />
           <ChatContent type={true} />
@@ -42,7 +42,7 @@ export default function Conversations() {
           <ChatContent type={true} />
           <ChatContent />
         </Scrollbar>
-        <div className="flex items-center bg-white px-10 py-4">
+        <div className="flex items-center bg-white px-10 py-[0.90rem]">
           <div className="relative w-full">
             <input
               type="search"
