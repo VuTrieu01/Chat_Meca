@@ -12,7 +12,7 @@ export default function ChatList() {
           <p className="font-bold text-2xl">Chat</p>
           <AiOutlineUsergroupAdd className="text-xl ml-10 cursor-pointer" />
         </div>
-        <SearchInput sx={"mx-5"} />
+        <SearchInput sx="mx-5 mb-5" />
         <div className="flex items-center text-gray-400 mx-5 mb-4">
           <AiFillWechat className="mr-2" /> Tất cả tin nhắn
         </div>

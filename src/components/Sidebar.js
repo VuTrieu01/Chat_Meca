@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import useStore from "../zustand/store";
 import Avatar from "./Avatar";
 import { BsChatDots, BsFillChatDotsFill } from "react-icons/bs";
 import { RiContactsBook2Line, RiContactsBook2Fill } from "react-icons/ri";
@@ -39,11 +40,15 @@ const sidebarLinks = [
 ];
 
 export default function Sidebar() {
-  const [activeSidebar, setActiveSidebar] = useState(0);
+  const [activeSidebar, setActiveSidebar] = useStore((state) => [
+    state.activeSidebar,
+    state.setActiveSidebar,
+  ]);
+
   return (
     <div className="h-screen">
       <div className="h-full w-full flex flex-col items-center pt-4 bg-green-600">
-        <Avatar sx="mx-2 my-10 cursor-pointer" />
+        <Avatar sx="mx-2 my-10 cursor-pointer" size="h-12 w-12" />
         <div className="h-full flex flex-col justify-between">
           <div className="flex flex-col">
             {sidebarLinks.slice(0, 3).map((item) => (

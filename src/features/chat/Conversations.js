@@ -50,9 +50,8 @@ export default function Conversations() {
               placeholder="Aa"
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-green-700">
-              <div className=" border-green-700 border-l-2"></div>
-              <BiImageAdd className="text-2xl mr-2 cursor-pointer" />
-              <IoSend className="text-xl cursor-pointer" />
+              <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+              <IoSend className="text-xl cursor-pointer hover:text-green-500" />
             </div>
           </div>
         </div>
