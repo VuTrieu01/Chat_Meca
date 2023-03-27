@@ -14,9 +14,9 @@ export default function Avatar(props) {
         />
       ) : (
         <FaUserAlt
-          className={`inline-block ${
-            props.size ? `h-${props.size} w-${props.size}` : "h-10 w-10"
-          } rounded-full ring-2 p-2 ring-white text-white bg-gray-400`}
+          className={`${
+            props.size ? `${props.size}` : "h-10 w-10"
+          } rounded-full p-2 text-white bg-gray-400`}
         />
       )}
     </div>

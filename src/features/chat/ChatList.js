@@ -6,7 +6,7 @@ import ChatItem from "../chat/ChatItem";
 
 export default function ChatList() {
   return (
-    <div className="h-full w-2/6 border-gray-50 border-r-2">
+    <div className="h-full w-2/5 border-gray-100 border-r-2">
       <div className="h-full py-5">
         <div className="flex items-center justify-between mx-5 mb-5">
           <p className="font-bold text-2xl">Chat</p>
@@ -17,7 +17,7 @@ export default function ChatList() {
           <AiFillWechat className="mr-2" /> Tất cả tin nhắn
         </div>
         <Scrollbar>
-          <ChatItem newChat={true} />
+          <ChatItem newChat={true} active={true} />
           <ChatItem />
           <ChatItem />
           <ChatItem />

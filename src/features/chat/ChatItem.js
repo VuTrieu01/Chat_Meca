@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "../../components/Avatar";
+import Ping from "../../components/Ping";
 
 export default function ChatItem(props) {
   return (
@@ -9,8 +10,13 @@ export default function ChatItem(props) {
       }`}
     >
       <div className="flex items-center">
-        <div className="mr-4">
+        <div className="flex items-end">
           <Avatar />
+          {props.active ? (
+            <Ping sx="right-3" />
+          ) : (
+            <div className="h-3 w-3"></div>
+          )}
         </div>
         <div className="w-full flex items-center justify-between">
           <div className="mr-4">

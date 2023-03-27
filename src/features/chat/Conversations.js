@@ -13,7 +13,7 @@ export default function Conversations() {
   return (
     <div className="h-screen w-full">
       <div className="h-full w-full bg-gray-100">
-        <div className="flex items-center justify-between bg-white p-3 border-gray-50 border-b-2">
+        <div className="flex items-center justify-between bg-white p-3 border-gray-100 border-b-2">
           <div className="flex items-center">
             <div className="flex items-end">
               <Avatar />
@@ -24,10 +24,10 @@ export default function Conversations() {
               <p>Đang hoạt động</p>
             </div>
           </div>
-          <div className="w-24 flex justify-between text-green-600 text-xl">
-            <IoCall className="cursor-pointer" />
-            <BsFillCameraVideoFill className="cursor-pointer" />
-            <HiDotsCircleHorizontal className="cursor-pointer" />
+          <div className="w-28 flex justify-between text-green-600 text-3xl">
+            <IoCall className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+            <BsFillCameraVideoFill className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+            <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
           </div>
         </div>
         <Scrollbar messageEl={messageEl}>
