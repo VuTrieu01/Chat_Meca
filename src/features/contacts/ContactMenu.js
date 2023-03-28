@@ -1,6 +1,6 @@
 import React from "react";
 import { HiOutlineUserGroup } from "react-icons/hi";
-import { FiMail } from "react-icons/fi";
+import { FiMail, FiUserPlus } from "react-icons/fi";
 import useStore from "../../zustand/store";
 
 export default function ContactMenu() {
@@ -29,6 +29,15 @@ export default function ContactMenu() {
         >
           <FiMail className="text-2xl" />
           <div className="ml-4 font-bold">Lời mời kết bạn</div>
+        </div>
+        <div
+          className={`flex items-center p-5 cursor-pointer ${
+            activeContact === 2 ? "bg-green-100" : "bg-white hover:bg-gray-100"
+          }`}
+          onClick={() => setActiveContact(2)}
+        >
+          <FiUserPlus className="text-2xl" />
+          <div className="ml-4 font-bold">Thêm bạn bè</div>
         </div>
       </div>
     </div>

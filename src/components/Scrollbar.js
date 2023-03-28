@@ -11,7 +11,7 @@ export default function Scrollbar(props) {
   }, []);
   return (
     <div
-      className="h-full overflow-x-hidden select-none scrollbar md:h-4/5 focus:scroll-smooth"
+      className="h-4/5 overflow-x-hidden select-none scrollbar focus:scroll-smooth"
       ref={props.messageEl}
     >
       <div className={`${props.sx}`}>{props.children}</div>
