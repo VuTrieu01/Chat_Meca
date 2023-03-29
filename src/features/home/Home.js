@@ -4,6 +4,7 @@ import useStore from "../../zustand/store";
 import Chat from "../chat/Chat";
 import Contact from "../contacts/Contact";
 import DatePage from "../date/DatePage";
+import Settings from "../setting/Settings";
 
 export default function Home() {
   const activeSidebar = useStore((state) => state.activeSidebar);
@@ -17,8 +18,6 @@ export default function Home() {
       case 2:
         return <DatePage />;
       case 3:
-        return <DatePage />;
-      case 4:
         return <DatePage />;
     }
   }

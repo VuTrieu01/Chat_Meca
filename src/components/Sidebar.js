@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import useStore from "../zustand/store";
 import Avatar from "./Avatar";
 import { BsChatDots, BsFillChatDotsFill } from "react-icons/bs";
@@ -10,6 +10,7 @@ import {
   AiOutlineSetting,
   AiFillSetting,
 } from "react-icons/ai";
+import Settings from "../features/setting/Settings";
 
 const sidebarLinks = [
   {
@@ -44,7 +45,22 @@ export default function Sidebar() {
     state.activeSidebar,
     state.setActiveSidebar,
   ]);
-
+  const [setting, setSetting] = useState(0);
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef();
+  const settingRef = useRef();
+  const handleChange = () => {
+    if (setting !== 4) {
+      setSetting(4);
+    } else {
+      setSetting(0);
+    }
+    setOpen(!open);
+  };
+  const handleChangeSetting = () => {
+    setSetting(0);
+    setOpen(false);
+  };
   return (
     <div className="h-screen">
       <div className="h-full w-full flex flex-col items-center pt-4 bg-green-600">
@@ -65,8 +81,8 @@ export default function Sidebar() {
               </div>
             ))}
           </div>
-          <div className="flex flex-col">
-            {sidebarLinks.slice(3, 5).map((item) => (
+          <div className="relative flex flex-col">
+            {sidebarLinks.slice(3, 4).map((item) => (
               <div
                 key={item.id}
                 className={`w-full p-5 text-3xl text-white cursor-pointer ${
@@ -79,6 +95,19 @@ export default function Sidebar() {
                 {activeSidebar === item.id ? item.iconFill : item.icon}
               </div>
             ))}
+            {sidebarLinks.slice(4).map((item) => (
+              <div
+                ref={settingRef}
+                key={item.id}
+                className={`w-full p-5 text-3xl text-white cursor-pointer ${
+                  setting === item.id ? "bg-green-800 " : "hover:bg-green-700"
+                }`}
+                onClick={handleChange}
+              >
+                {setting === item.id ? item.iconFill : item.icon}
+              </div>
+            ))}
+            {open && <Settings event={menuRef} onClick={handleChangeSetting} />}
           </div>
         </div>
       </div>

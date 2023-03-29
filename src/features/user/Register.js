@@ -1,20 +1,101 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 import { BiShow, BiHide } from "react-icons/bi";
 import DatePicker from "../../components/DatePicker";
 import RadioButton from "../../components/RadioButton";
+import { uid } from "uid";
+import { IoAlertCircleSharp } from "react-icons/io5";
+import Validation from "./Validation";
+import { child, onValue, ref, set } from "firebase/database";
+import { database } from "../../firebase";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Register() {
   const [isVisible, setVisible] = useState(false);
   const [passwordConfirm, setPasswordConfirm] = useState(false);
+  const [values, setValues] = useState({
+    lastName: "",
+    firstName: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    dateOfBirth: "",
+    gender: "Nữ",
+  });
+  const [errors, setErrors] = useState({});
+  const [error, setError] = useState("");
+  const dbRef = ref(database);
+  const { signup } = useAuth();
+  const [listEmail, setListEmail] = useState([]);
+  const uuid = uid();
+  const navigate = useNavigate();
+
   const handleToggle = () => {
     setVisible(!isVisible);
   };
   const handPasswordConfirm = () => {
     setPasswordConfirm(!passwordConfirm);
   };
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+  useEffect(() => {
+    onValue(child(dbRef, `Account`), (snapshot) => {
+      setListEmail([]);
+      const data = snapshot.val();
+      if (data !== null) {
+        Object.values(data).map((item) => {
+          setListEmail((oldArray) => [...oldArray, item]);
+        });
+      }
+    });
+  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors(Validation(values));
+    if (
+      values.lastName !== "" &&
+      values.firstName !== "" &&
+      values.email !== "" &&
+      values.password !== "" &&
+      values.passwordConfirm !== "" &&
+      values.dateOfBirth !== ""
+    ) {
+      if (
+        listEmail.map((item) => item.email).find((a) => a === values.email) !==
+        undefined
+      ) {
+        setError("Email đã tồn tại!!!");
+      } else {
+        try {
+          setError("");
+          set(ref(database, `Account` + `/${uuid}`), {
+            lastName: values.lastName,
+            firstName: values.firstName,
+            email: values.email,
+            dateOfBirth: values.dateOfBirth,
+            gender: values.gender,
+            uuid,
+          })
+            .then(() => {
+              console.log("Success");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+          await signup(values.email, values.password);
+          navigate("/");
+        } catch (e) {
+          setError("Tạo tài khoản thất bại!!!");
+          console.log(e);
+        }
+      }
+    }
+  };
+
   return (
     <div className="h-screen ">
       <div className="h-full">
@@ -27,45 +108,123 @@ export default function Register() {
             />
           </div>
           <div className="flex justify-center p-2 md:w-2/5 xs:items-center">
-            <form>
-              <p className="font-bold uppercase md:text-2xl mb-5">
+            <form onSubmit={handleSubmit}>
+              <p className="font-bold uppercase md:text-2xl mb-3">
                 Tạo tài khoản mới
               </p>
-              <p className="text-base mb-5">
+              <p className="text-base mb-2">
                 Vui lòng điền đầy đủ thông tin của bạn
               </p>
+              <p className="text-base mb-2 text-red-500">{error}</p>
               <div className="flex flex-col md:flex-row">
-                <TextField type="text" placeholder="Họ" sx="w-full mb-5 mr-2" />
-                <TextField type="text" placeholder="Tên" sx="w-full mb-5" />
+                <div className="mb-3 md:mr-2">
+                  {errors.lastName && (
+                    <div className="flex items-center text-red-500 text-sm mb-1">
+                      <IoAlertCircleSharp className="text-lg" />
+                      {errors.lastName}
+                    </div>
+                  )}
+                  <TextField
+                    type="text"
+                    placeholder="Họ"
+                    sx="w-full"
+                    error={errors.lastName ? "border-red-500" : ""}
+                    value={values.lastName}
+                    name="lastName"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  {errors.firstName && (
+                    <div className="flex items-center text-red-500 text-sm mb-1">
+                      <IoAlertCircleSharp className="text-lg" />
+                      {errors.firstName}
+                    </div>
+                  )}
+                  <TextField
+                    type="text"
+                    placeholder="Tên"
+                    sx="w-full"
+                    error={errors.firstName ? "border-red-500" : ""}
+                    value={values.firstName}
+                    name="firstName"
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
+
               <div className="flex flex-col justify-center items-center">
+                {errors.email && (
+                  <div className="w-full flex items-center text-red-500 text-sm mb-1">
+                    <IoAlertCircleSharp className="text-lg" />
+                    {errors.email}
+                  </div>
+                )}
                 <TextField
                   type="text"
                   placeholder="Email"
-                  sx="w-80 md:w-full mb-5"
+                  sx="w-80 md:w-full mb-3"
+                  error={errors.email ? "border-red-500" : ""}
+                  value={values.email}
+                  name="email"
+                  onChange={handleChange}
                 />
+                {errors.password && (
+                  <div className="w-full flex items-center text-red-500 text-sm mb-1">
+                    <IoAlertCircleSharp className="text-lg" />
+                    {errors.password}
+                  </div>
+                )}
                 <TextField
                   type={!isVisible ? "password" : "text"}
                   placeholder="Mật khẩu"
-                  sx="w-80 md:w-full mb-5"
+                  sx="w-80 md:w-full mb-3"
                   onClick={handleToggle}
+                  error={errors.password ? "border-red-500" : ""}
+                  value={values.password}
+                  name="password"
+                  onChange={handleChange}
                 >
                   {isVisible ? <BiHide /> : <BiShow />}
                 </TextField>
+                {errors.passwordConfirm && (
+                  <div className="w-full flex items-center text-red-500 text-sm mb-1">
+                    <IoAlertCircleSharp className="text-lg" />
+                    {errors.passwordConfirm}
+                  </div>
+                )}
                 <TextField
                   type={!passwordConfirm ? "password" : "text"}
                   placeholder="Nhập lại mật khẩu"
-                  sx="w-80 md:w-full mb-5"
+                  sx="w-80 md:w-full mb-3"
                   onClick={handPasswordConfirm}
+                  error={errors.passwordConfirm ? "border-red-500" : ""}
+                  value={values.passwordConfirm}
+                  name="passwordConfirm"
+                  onChange={handleChange}
                 >
                   {passwordConfirm ? <BiHide /> : <BiShow />}
                 </TextField>
+                {errors.dateOfBirth && (
+                  <div className="w-full flex items-center text-red-500 text-sm mb-1">
+                    <IoAlertCircleSharp className="text-lg" />
+                    {errors.dateOfBirth}
+                  </div>
+                )}
                 <DatePicker
                   type="date"
                   placeholder="Ngày sinh"
-                  sx="w-80 md:w-full mb-5"
+                  sx="w-80 md:w-full mb-3"
+                  error={errors.dateOfBirth ? "border-red-500" : ""}
+                  value={values.dateOfBirth}
+                  name="dateOfBirth"
+                  onChange={handleChange}
                 />
-                <RadioButton />
+                <RadioButton
+                  onChange={handleChange}
+                  name="gender"
+                  checked={values.gender}
+                />
                 <Button sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
                   Đăng ký
                 </Button>
