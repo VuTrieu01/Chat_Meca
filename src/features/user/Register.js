@@ -5,7 +5,6 @@ import TextField from "../../components/TextField";
 import { BiShow, BiHide } from "react-icons/bi";
 import DatePicker from "../../components/DatePicker";
 import RadioButton from "../../components/RadioButton";
-import { uid } from "uid";
 import { IoAlertCircleSharp } from "react-icons/io5";
 import Validation from "./Validation";
 import { child, onValue, ref, set } from "firebase/database";
@@ -29,9 +28,7 @@ export default function Register() {
   const dbRef = ref(database);
   const { signup } = useAuth();
   const [listEmail, setListEmail] = useState([]);
-  const uuid = uid();
   const navigate = useNavigate();
-
   const handleToggle = () => {
     setVisible(!isVisible);
   };
@@ -56,41 +53,50 @@ export default function Register() {
     e.preventDefault();
     setErrors(Validation(values));
     if (
-      values.lastName !== "" &&
-      values.firstName !== "" &&
-      values.email !== "" &&
-      values.password !== "" &&
-      values.passwordConfirm !== "" &&
-      values.dateOfBirth !== ""
+      errors.lastName === undefined &&
+      errors.firstName === undefined &&
+      errors.email === undefined &&
+      errors.password === undefined &&
+      errors.passwordConfirm === undefined &&
+      errors.dateOfBirth === undefined
     ) {
       if (
-        listEmail.map((item) => item.email).find((a) => a === values.email) !==
-        undefined
+        values.lastName !== "" &&
+        values.firstName !== "" &&
+        values.email !== "" &&
+        values.password !== "" &&
+        values.passwordConfirm !== "" &&
+        values.dateOfBirth !== ""
       ) {
-        setError("Email đã tồn tại!!!");
-      } else {
-        try {
-          setError("");
-          set(ref(database, `Account` + `/${uuid}`), {
-            lastName: values.lastName,
-            firstName: values.firstName,
-            email: values.email,
-            dateOfBirth: values.dateOfBirth,
-            gender: values.gender,
-            uuid,
-          })
-            .then(() => {
-              console.log("Success");
+        if (
+          listEmail
+            .map((item) => item.email)
+            .find((a) => a === values.email) !== undefined
+        ) {
+          setError("Email đã tồn tại!!!");
+        } else {
+          try {
+            setError("");
+            const res = await signup(values.email, values.password);
+            set(ref(database, `Account` + `/${res.user.uid}`), {
+              uid: res.user.uid,
+              lastName: values.lastName,
+              firstName: values.firstName,
+              email: values.email,
+              dateOfBirth: values.dateOfBirth,
+              gender: values.gender,
             })
-            .catch((error) => {
-              console.log(error);
-            });
-
-          await signup(values.email, values.password);
-          navigate("/");
-        } catch (e) {
-          setError("Tạo tài khoản thất bại!!!");
-          console.log(e);
+              .then(() => {
+                console.log("Success");
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            navigate("/");
+          } catch (e) {
+            setError("Tạo tài khoản thất bại!!!");
+            console.log(e);
+          }
         }
       }
     }
@@ -152,7 +158,6 @@ export default function Register() {
                   />
                 </div>
               </div>
-
               <div className="flex flex-col justify-center items-center">
                 {errors.email && (
                   <div className="w-full flex items-center text-red-500 text-sm mb-1">
@@ -225,7 +230,10 @@ export default function Register() {
                   name="gender"
                   checked={values.gender}
                 />
-                <Button sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
+                <Button
+                  type={true}
+                  sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95"
+                >
                   Đăng ký
                 </Button>
               </div>

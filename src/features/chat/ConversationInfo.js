@@ -29,7 +29,7 @@ export default function ConversationInfo() {
             <Ping sx="left-[3.8rem] bottom-4" />
           </div>
           <div className="text-center">
-            <p className="font-bold text-xl">Tên</p>
+            <p className="font-bold text-xl">Hoàng Vũ</p>
             <p>Đang hoạt động</p>
           </div>
           <div className="flex mt-5">

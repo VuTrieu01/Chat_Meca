@@ -1,11 +1,19 @@
+import { child, ref, update } from "firebase/database";
 import React from "react";
 import { AiOutlineSetting, AiOutlineLogout } from "react-icons/ai";
 import { FiUser } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
+import { database } from "../../firebase";
 
 export default function Settings(props) {
-  const { logOut } = useAuth();
+  const dbRef = ref(database);
+  const { logOut, currentUser } = useAuth();
+  const lastLoggedInTime = new Date();
   const handleLogOut = async () => {
+    update(child(dbRef, `Account` + `/${currentUser.uid}`), {
+      active: false,
+      lastLoggedInTime: lastLoggedInTime.getTime(),
+    });
     try {
       await logOut();
     } catch (e) {

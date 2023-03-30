@@ -11,6 +11,7 @@ import {
   AiFillSetting,
 } from "react-icons/ai";
 import Settings from "../features/setting/Settings";
+import { useAuth } from "../context/AuthContext";
 
 const sidebarLinks = [
   {
@@ -49,6 +50,7 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
   const settingRef = useRef();
+  const { currentUser } = useAuth();
   const handleChange = () => {
     if (setting !== 4) {
       setSetting(4);
@@ -64,7 +66,11 @@ export default function Sidebar() {
   return (
     <div className="h-screen">
       <div className="h-full w-full flex flex-col items-center pt-4 bg-green-600">
-        <Avatar sx="mx-2 my-10 cursor-pointer" size="h-12 w-12" />
+        <Avatar
+          title={currentUser.email}
+          sx="mx-2 my-10 cursor-pointer"
+          size="h-12 w-12"
+        />
         <div className="h-full flex flex-col justify-between">
           <div className="flex flex-col">
             {sidebarLinks.slice(0, 3).map((item) => (

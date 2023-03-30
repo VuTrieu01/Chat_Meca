@@ -93,7 +93,10 @@ export default function Login() {
                 >
                   {isVisible ? <BiHide /> : <BiShow />}
                 </TextField>
-                <Button sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
+                <Button
+                  type={true}
+                  sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95"
+                >
                   Đăng nhập
                 </Button>
               </div>
