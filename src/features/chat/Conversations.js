@@ -9,30 +9,44 @@ import Scrollbar from "../../components/Scrollbar";
 import ChatContent from "./ChatContent";
 import OfflineTimeCounter from "../../components/OfflineTimeCounter";
 import { uid } from "uid";
-import { child, ref, set, update } from "firebase/database";
+import { ref, set } from "firebase/database";
 import { database } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
+import useStore from "../../zustand/store";
 
 export default function Conversations(props) {
   const uuid = uid();
-  const uidText = uid();
-  const dbRef = ref(database);
   const { currentUser } = useAuth();
   const provisionalDataAccount = props.provisionalDataAccount;
   const messageEl = useRef(null);
   const [values, setValues] = useState("");
+  const setActiveSidebar = useStore((state) => state.setActiveSidebar);
+  const setOpenChatItem = useStore((state) => state.setOpenChatItem);
+  const lastLoggedInTime = new Date();
   const handleChat = (item) => {
-    set(ref(database, `Chat` + `/${uuid}`), {
-      uid: uuid,
-      accountId: currentUser.uid,
-      accountFriendId: item.uid,
-    });
-    update(child(dbRef, `Chat` + `/${uuid}` + `/${uidText}`), {
-      uid: uidText,
-      newText: true,
-      text: values,
-    });
+    if (props.chat.length >= 0) {
+      set(ref(database, `Chat` + `/${uuid}`), {
+        uid: uuid,
+        accountId: currentUser.uid,
+        accountFriendId: item.uid,
+        newText: true,
+        text: values,
+        lastLoggedInTime: lastLoggedInTime.getTime(),
+      });
+    }
+    if (props.chatFriend.length > 0) {
+      set(ref(database, `Chat` + `/${uuid}`), {
+        uid: uuid,
+        accountId: item.uid,
+        accountFriendId: currentUser.uid,
+        newText: true,
+        textFriend: values,
+        lastLoggedInTime: lastLoggedInTime.getTime(),
+      });
+    }
     setValues("");
+    setActiveSidebar(0);
+    setOpenChatItem(true);
   };
   const handleChange = (e) => {
     setValues(e.target.value);
@@ -62,9 +76,13 @@ export default function Conversations(props) {
                   <p className="font-bold">
                     {item.lastName} {item.firstName}
                   </p>
-                  <OfflineTimeCounter
-                    lastLoggedInTime={item.lastLoggedInTime}
-                  />
+                  <div className="flex">
+                    <div className="mr-1">Hoạt động:</div>
+                    <OfflineTimeCounter
+                      lastLoggedInTime={item.lastLoggedInTime}
+                    />
+                    <div className="ml-1">trước</div>
+                  </div>
                 </div>
               </div>
             )}
@@ -75,7 +93,8 @@ export default function Conversations(props) {
             </div>
           </div>
           <Scrollbar messageEl={messageEl}>
-            <ChatContent type={true} content="Hello" />
+            <ChatContent chat={props.chat} />
+            <ChatContent chat={props.chatFriend} />
           </Scrollbar>
           <div className="flex items-center bg-white px-10 py-[0.90rem]">
             <div className="relative w-full">

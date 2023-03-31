@@ -1,10 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineUsergroupAdd, AiFillWechat } from "react-icons/ai";
 import Scrollbar from "../../components/Scrollbar";
 import SearchInput from "../../components/SearchInput";
 import ChatItem from "../chat/ChatItem";
+import { database } from "../../firebase";
+import { child, onValue, ref } from "firebase/database";
+import { useAuth } from "../../context/AuthContext";
+import useStore from "../../zustand/store";
 
 export default function ChatList() {
+  const dbRef = ref(database);
+  const { currentUser } = useAuth();
+  const [messenger, setMessenger] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const openChatItem = useStore((state) => state.openChatItem);
+  useEffect(() => {
+    onValue(child(dbRef, `Chat`), (snapshot) => {
+      setMessenger([]);
+      const data = snapshot.val();
+      if (data !== null) {
+        Object.values(data).map((item) => {
+          setMessenger((oldArray) => [...oldArray, item]);
+        });
+      }
+    });
+    onValue(child(dbRef, `Account`), (snapshot) => {
+      setAccounts([]);
+      const data = snapshot.val();
+      if (data !== null) {
+        Object.values(data).map((item) => {
+          setAccounts((oldArray) => [...oldArray, item]);
+        });
+      }
+    });
+  }, []);
+  let chat = [];
+  let chatFriend = [];
+  if (messenger !== undefined) {
+    chat = messenger.filter((val) => val.accountId === currentUser.uid);
+    chatFriend = messenger.filter(
+      (val) => val.accountFriendId === currentUser.uid
+    );
+  }
+
   return (
     <div className="h-full w-2/5 border-gray-100 border-r-2">
       <div className="h-full py-5">
@@ -17,54 +55,19 @@ export default function ChatList() {
           <AiFillWechat className="mr-2" /> Tất cả tin nhắn
         </div>
         <Scrollbar>
-          <ChatItem
+          {/* <ChatItem
             newChat={true}
             active={true}
             time="1 phút"
             name="Hồng Hoàng"
             url="https://material-ui.com/static/images/avatar/2.jpg"
-          />
-          <ChatItem click={true} test="Mai gặp" time="5 phút" name="Hoàng Vũ" />
+          /> */}
+          <ChatItem click={openChatItem} chat={chat} accounts={accounts} />
           <ChatItem
-            test="Được thôi"
-            time="5 tiếng"
-            name="Bá Việt"
-            url="https://material-ui.com/static/images/avatar/1.jpg"
+            click={openChatItem}
+            chat={chatFriend}
+            accounts={accounts}
           />
-          <ChatItem
-            test="Oke"
-            active={true}
-            time="6 tiếng"
-            name="Tô Vũ"
-            url="https://material-ui.com/static/images/avatar/3.jpg"
-          />
-          <ChatItem
-            test="Được rồi"
-            time="8 tiếng"
-            name="Nguyễn Hào"
-            url="https://material-ui.com/static/images/avatar/4.jpg"
-          />
-          <ChatItem
-            test="Oke"
-            time="10 tiếng"
-            name="Định Hòa"
-            url="https://images.unsplash.com/photo-1551782450-a2132b4ba21d"
-          />
-          <ChatItem
-            test="Chắc chắn"
-            time="11 tiếng"
-            name="Hoàng Vũ"
-            url="https://material-ui.com/static/images/avatar/6.jpg"
-          />
-          <ChatItem
-            active={true}
-            time="1 ngày"
-            name="Vũ"
-            url="https://images.unsplash.com/photo-1522770179533-24471fcdba45"
-          />
-          <ChatItem time="1 ngày" />
-          <ChatItem test="Oke" time="1 ngày" />
-          <ChatItem test="Mai gặp" time="1 ngày" />
         </Scrollbar>
       </div>
     </div>

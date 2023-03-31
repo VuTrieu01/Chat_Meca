@@ -6,10 +6,14 @@ import useStore from "../../zustand/store";
 export default function ContactMenu() {
   const activeContact = useStore((state) => state.activeContact);
   const setOpenChat = useStore((state) => state.setOpenChat);
+  const addProvisionalDataAccount = useStore(
+    (state) => state.addProvisionalDataAccount
+  );
   const setActiveContact = useStore((state) => state.setActiveContact);
   const handleClick = (id) => {
     setActiveContact(id);
     setOpenChat(false);
+    addProvisionalDataAccount([]);
   };
   return (
     <div className="h-full w-[30%] border-gray-100 border-r-2">

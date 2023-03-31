@@ -25,6 +25,7 @@ export default function ChatView() {
     });
   }, []);
   let chat = [];
+  let chatFriend = [];
   if (messenger !== undefined) {
     chat = messenger.filter(
       (val) =>
@@ -33,21 +34,20 @@ export default function ChatView() {
           .map((item) => item.uid)
           .includes(val.accountFriendId)
     );
+    chatFriend = messenger.filter(
+      (val) =>
+        val.accountFriendId === currentUser.uid &&
+        provisionalDataAccount.map((item) => item.uid).includes(val.accountId)
+    );
   }
-  console.log(chat);
   return (
     <>
-      {provisionalDataAccount ? (
-        <>
-          <Conversations provisionalDataAccount={provisionalDataAccount} />
-          <ConversationInfo />
-        </>
-      ) : (
-        <>
-          <Conversations />
-          <ConversationInfo />
-        </>
-      )}
+      <Conversations
+        provisionalDataAccount={provisionalDataAccount}
+        chat={chat}
+        chatFriend={chatFriend}
+      />
+      <ConversationInfo provisionalDataAccount={provisionalDataAccount}/>
     </>
   );
 }

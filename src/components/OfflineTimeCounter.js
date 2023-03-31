@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 export default function OfflineTimeCounter(props) {
   const [offlineTime, setOfflineTime] = useState(0);
   const [offlineUnit, setOfflineUnit] = useState("");
-
   useEffect(() => {
     const interval = setInterval(() => {
       // Tính thời gian offline tính đến thời điểm hiện tại và chuyển đổi sang phút, giờ, ngày, tuần hoặc tháng
@@ -44,10 +43,10 @@ export default function OfflineTimeCounter(props) {
   return (
     <div>
       {offlineTime > 0 && (
-        <h1>
-          Hoạt động: {offlineTime} {offlineUnit}
+        <div>
+          {offlineTime} {offlineUnit}
           {offlineTime > 1}
-        </h1>
+        </div>
       )}
     </div>
   );

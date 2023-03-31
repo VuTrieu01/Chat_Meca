@@ -5,6 +5,7 @@ const useStore = create((set) => ({
   activeContact: 0,
   openChat: false,
   provisionalDataAccount: [],
+  openChatItem: false,
   setActiveSidebar: (activeSidebar) =>
     set(() => ({ activeSidebar: activeSidebar })),
   setActiveContact: (activeContact) =>
@@ -14,6 +15,8 @@ const useStore = create((set) => ({
     set(() => ({
       provisionalDataAccount: [...newItem],
     })),
+  setOpenChatItem: (openChatItem) =>
+    set(() => ({ openChatItem: openChatItem })),
 }));
 
 export default useStore;
