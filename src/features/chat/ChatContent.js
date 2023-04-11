@@ -12,7 +12,6 @@ export default function ChatContent(props) {
       (a, b) => a.lastLoggedInTime - b.lastLoggedInTime
     );
   }
-
   return (
     <>
       {chat.map((item, index) => (

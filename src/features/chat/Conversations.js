@@ -94,13 +94,12 @@ export default function Conversations(props) {
           </div>
           <Scrollbar messageEl={messageEl}>
             <ChatContent chat={props.chat} />
-            <ChatContent chat={props.chatFriend} />
+            <ChatContent chatFriend={props.chatFriend} />
           </Scrollbar>
           <div className="flex items-center bg-white px-10 py-[0.90rem]">
-            <div className="relative w-full">
-              <input
-                type="search"
-                className="block w-full p-3 pr-10 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0"
+            <div className="relative w-full h-full">
+              <textarea
+                className="block w-full h-12 p-3 pr-16 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0 resize-none"
                 placeholder="Aa"
                 value={values}
                 onChange={handleChange}

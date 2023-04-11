@@ -16,8 +16,10 @@ export default function ChatItem(props) {
     chat = props.chat.sort((a, b) => b.lastLoggedInTime - a.lastLoggedInTime);
   }
   if (props.accounts !== undefined) {
-    account = props.accounts.filter((val) =>
-      chat.map((item) => item.accountFriendId).includes(val.uid)
+    account = props.accounts.filter(
+      (val) =>
+        chat.map((item) => item.accountFriendId).includes(val.uid) ||
+        chat.map((item) => item.accountId).includes(val.uid)
     );
   }
   const lastItemChat = [chat[0]];
@@ -46,7 +48,7 @@ export default function ChatItem(props) {
             </div>
             <div className="w-full flex items-center justify-between">
               <div className="mr-4">
-                <div className="font-bold">
+                <div className="w-48 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                   {item.lastName} {item.firstName}
                 </div>
                 {props.newChat ? (
@@ -54,7 +56,7 @@ export default function ChatItem(props) {
                     Hẹn gặp 8 giờ nhé
                   </div>
                 ) : (
-                  <div className="w-36 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
                     {lastItemChat.map((item, index, array) => {
                       if (array.length - 1 === index) {
                         return item.text;

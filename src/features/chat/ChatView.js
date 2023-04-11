@@ -47,7 +47,7 @@ export default function ChatView() {
         chat={chat}
         chatFriend={chatFriend}
       />
-      <ConversationInfo provisionalDataAccount={provisionalDataAccount}/>
+      <ConversationInfo provisionalDataAccount={provisionalDataAccount} />
     </>
   );
 }

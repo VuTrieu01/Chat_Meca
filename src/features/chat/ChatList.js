@@ -37,15 +37,16 @@ export default function ChatList() {
   let chat = [];
   let chatFriend = [];
   if (messenger !== undefined) {
-    chat = messenger.filter((val) => val.accountId === currentUser.uid);
-    chatFriend = messenger.filter(
-      (val) => val.accountFriendId === currentUser.uid
-    );
+    chat = messenger
+      .filter((val) => val.accountId === currentUser.uid)
+      .map((item) => ({ ...item, accountId: 0 }));
+    chatFriend = messenger
+      .filter((val) => val.accountFriendId === currentUser.uid)
+      .map((item) => ({ ...item, accountFriendId: 0 }));
   }
-
   return (
-    <div className="h-full w-2/5 border-gray-100 border-r-2">
-      <div className="h-full py-5">
+    <div className="h-full border-gray-100 border-r-2">
+      <div className="h-full w-[22rem] py-5">
         <div className="flex items-center justify-between mx-5 mb-5">
           <p className="font-bold text-2xl">Chat</p>
           <AiOutlineUsergroupAdd className="text-xl ml-10 cursor-pointer" />
@@ -54,21 +55,18 @@ export default function ChatList() {
         <div className="flex items-center text-gray-400 mx-5 mb-4">
           <AiFillWechat className="mr-2" /> Tất cả tin nhắn
         </div>
-        <Scrollbar>
-          {/* <ChatItem
-            newChat={true}
-            active={true}
-            time="1 phút"
-            name="Hồng Hoàng"
-            url="https://material-ui.com/static/images/avatar/2.jpg"
-          /> */}
-          <ChatItem click={openChatItem} chat={chat} accounts={accounts} />
-          <ChatItem
-            click={openChatItem}
-            chat={chatFriend}
-            accounts={accounts}
-          />
-        </Scrollbar>
+        {messenger.length > 0 ? (
+          <Scrollbar>
+            <ChatItem click={openChatItem} chat={chat} accounts={accounts} />
+            <ChatItem
+              click={openChatItem}
+              chat={chatFriend}
+              accounts={accounts}
+            />
+          </Scrollbar>
+        ) : (
+          <div className="mx-5">Không có cuộc trò chuyện nào</div>
+        )}
       </div>
     </div>
   );
