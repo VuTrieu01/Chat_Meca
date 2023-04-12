@@ -60,7 +60,7 @@ export default function ChatList() {
             <ChatItem click={openChatItem} chat={chat} accounts={accounts} />
             <ChatItem
               click={openChatItem}
-              chat={chatFriend}
+              chatFriend={chatFriend}
               accounts={accounts}
             />
           </Scrollbar>

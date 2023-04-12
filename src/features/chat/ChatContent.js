@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "../../components/Avatar";
+import { ConvertNumberToTime } from "../../components/ConvertNumberToTime";
 
 export default function ChatContent(props) {
   let chat = [];
@@ -19,8 +20,8 @@ export default function ChatContent(props) {
           {item.text ? (
             <div className="flex justify-end ml-14">
               <div
-                title="09:12"
-                className="bg-green-500 text-white py-2 px-4 rounded-3xl"
+                title={ConvertNumberToTime(item.lastLoggedInTime)}
+                className="max-w-[23rem] bg-green-500 text-white py-2 px-4 rounded-3xl break-words"
               >
                 {item.text}
               </div>
@@ -29,8 +30,8 @@ export default function ChatContent(props) {
             <div className="flex">
               <Avatar />
               <div
-                title="09:12"
-                className="bg-gray-200 text-black py-2 px-4 rounded-3xl ml-3 mr-14"
+                title={ConvertNumberToTime(item.lastLoggedInTime)}
+                className="max-w-[23rem] bg-gray-200 text-black py-2 px-4 rounded-3xl ml-3 mr-14 break-words"
               >
                 {item.textFriend}
               </div>
@@ -43,8 +44,8 @@ export default function ChatContent(props) {
           {item.textFriend ? (
             <div className="flex justify-end ml-14">
               <div
-                title="09:12"
-                className="bg-green-500 text-white py-2 px-4 rounded-3xl"
+                title={ConvertNumberToTime(item.lastLoggedInTime)}
+                className="max-w-[23rem] bg-green-500 text-white py-2 px-4 rounded-3xl break-words"
               >
                 {item.textFriend}
               </div>
@@ -53,8 +54,8 @@ export default function ChatContent(props) {
             <div className="flex">
               <Avatar />
               <div
-                title="09:12"
-                className="bg-gray-200 text-black py-2 px-4 rounded-3xl ml-3 mr-14"
+                title={ConvertNumberToTime(item.lastLoggedInTime)}
+                className="max-w-[23rem] bg-gray-200 text-black py-2 px-4 rounded-3xl ml-3 mr-14 break-words"
               >
                 {item.text}
               </div>
