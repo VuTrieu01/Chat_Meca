@@ -11,8 +11,8 @@ export default function Friend(props) {
     props.item.accountId.includes(val.uid)
   );
   const handleClick = () => {
-    setOpenChat(true);
     addProvisionalDataAccount(accounts);
+    setOpenChat(true);
   };
   return (
     <>

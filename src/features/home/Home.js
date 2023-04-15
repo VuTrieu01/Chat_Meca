@@ -14,18 +14,6 @@ export default function Home() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const { currentUser } = useAuth();
   const activeSidebar = useStore((state) => state.activeSidebar);
-  function SwitchCase() {
-    switch (activeSidebar) {
-      case 0:
-        return <Chat />;
-      case 1:
-        return <Contact />;
-      case 2:
-        return <DatePage />;
-      case 3:
-        return <DatePage />;
-    }
-  }
   useEffect(() => {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
@@ -64,7 +52,10 @@ export default function Home() {
     <div className="h-screen w-full">
       <div className="h-full w-full flex">
         <Sidebar />
-        <SwitchCase />
+        {activeSidebar === 0 && <Chat />}
+        {activeSidebar === 1 && <Contact />}
+        {activeSidebar === 2 && <DatePage />}
+        {activeSidebar === 3 && <DatePage />}
       </div>
     </div>
   );

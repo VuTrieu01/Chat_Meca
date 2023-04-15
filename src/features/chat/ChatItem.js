@@ -12,7 +12,7 @@ export default function ChatItem(props) {
     (state) => state.addProvisionalDataAccount
   );
   const setOpenChat = useStore((state) => state.setOpenChat);
-  const openChat = useStore((state) => state.openChat);
+  const setOpenChatItem = useStore((state) => state.setOpenChatItem);
   let chat = [];
   let chatFriend = [];
   let account = [];
@@ -36,18 +36,23 @@ export default function ChatItem(props) {
   const lastItemChat = [chat[0]];
   const lastItemChatFriend = [chatFriend[0]];
   const handleClick = (item) => {
-    setOpenChat(true);
+    chat
+      .filter((val) => val.newText === true && val.textFriend)
+      .map((item) => {
+        update(child(dbRef, `Chat` + `/${item.uid}`), {
+          newText: false,
+        });
+      });
+    chatFriend
+      .filter((val) => val.newText === true && val.text)
+      .map((item) => {
+        update(child(dbRef, `Chat` + `/${item.uid}`), {
+          newText: false,
+        });
+      });
+    setOpenChatItem(item.uid);
     addProvisionalDataAccount([item]);
-    chat.map((item) =>
-      update(child(dbRef, `Chat` + `/${item.uid}`), {
-        newText: false,
-      })
-    );
-    chatFriend.map((item) =>
-      update(child(dbRef, `Chat` + `/${item.uid}`), {
-        newText: false,
-      })
-    );
+    setOpenChat(true);
   };
   return (
     <>
@@ -55,7 +60,9 @@ export default function ChatItem(props) {
         <div
           key={index}
           className={`w-full px-5 py-4 cursor-pointer ${
-            props.click ? "bg-green-100" : "bg-white hover:bg-gray-100"
+            props.click === item.uid
+              ? "bg-green-100"
+              : "bg-white hover:bg-gray-100"
           }`}
           onClick={() => handleClick(item)}
         >
@@ -122,7 +129,9 @@ export default function ChatItem(props) {
         <div
           key={index}
           className={`w-full px-5 py-4 cursor-pointer ${
-            props.click ? "bg-green-100" : "bg-white hover:bg-gray-100"
+            props.click === item.uid
+              ? "bg-green-100"
+              : "bg-white hover:bg-gray-100"
           }`}
           onClick={() => handleClick(item)}
         >

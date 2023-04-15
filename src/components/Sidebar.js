@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import useStore from "../zustand/store";
 import Avatar from "./Avatar";
 import { BsChatDots, BsFillChatDotsFill } from "react-icons/bs";
@@ -46,22 +46,24 @@ export default function Sidebar() {
     state.activeSidebar,
     state.setActiveSidebar,
   ]);
-  const [setting, setSetting] = useState(0);
+  const setOpenChat = useStore((state) => state.setOpenChat);
   const [open, setOpen] = useState(false);
-  const menuRef = useRef();
-  const settingRef = useRef();
   const { currentUser } = useAuth();
-  const handleChange = () => {
-    if (setting !== 4) {
-      setSetting(4);
-    } else {
+  const [setting, setSetting] = useState(0);
+  const handleChange = (item) => {
+    if (item < 4) {
+      setActiveSidebar(item);
+      setOpenChat(false);
       setSetting(0);
+      setOpen(false);
+    } else {
+      if (setting !== 4) {
+        setSetting(4);
+      } else {
+        setSetting(0);
+      }
+      setOpen(!open);
     }
-    setOpen(!open);
-  };
-  const handleChangeSetting = () => {
-    setSetting(0);
-    setOpen(false);
   };
   return (
     <div className="h-screen">
@@ -81,14 +83,14 @@ export default function Sidebar() {
                     ? "bg-green-800 "
                     : "hover:bg-green-700"
                 }`}
-                onClick={() => setActiveSidebar(item.id)}
+                onClick={() => handleChange(item.id)}
               >
                 {activeSidebar === item.id ? item.iconFill : item.icon}
               </div>
             ))}
           </div>
           <div className="relative flex flex-col">
-            {sidebarLinks.slice(3, 4).map((item) => (
+            {sidebarLinks.slice(3, 5).map((item) => (
               <div
                 key={item.id}
                 className={`w-full p-5 text-3xl text-white cursor-pointer ${
@@ -96,24 +98,14 @@ export default function Sidebar() {
                     ? "bg-green-800 "
                     : "hover:bg-green-700"
                 }`}
-                onClick={() => setActiveSidebar(item.id)}
+                onClick={() => handleChange(item.id)}
               >
-                {activeSidebar === item.id ? item.iconFill : item.icon}
+                {activeSidebar === item.id || setting === item.id
+                  ? item.iconFill
+                  : item.icon}
               </div>
             ))}
-            {sidebarLinks.slice(4).map((item) => (
-              <div
-                ref={settingRef}
-                key={item.id}
-                className={`w-full p-5 text-3xl text-white cursor-pointer ${
-                  setting === item.id ? "bg-green-800 " : "hover:bg-green-700"
-                }`}
-                onClick={handleChange}
-              >
-                {setting === item.id ? item.iconFill : item.icon}
-              </div>
-            ))}
-            {open && <Settings event={menuRef} onClick={handleChangeSetting} />}
+            {open && <Settings setOpen={setOpen} />}
           </div>
         </div>
       </div>

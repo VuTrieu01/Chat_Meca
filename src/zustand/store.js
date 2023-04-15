@@ -5,7 +5,7 @@ const useStore = create((set) => ({
   activeContact: 0,
   openChat: false,
   provisionalDataAccount: [],
-  openChatItem: false,
+  openChatItem: 0,
   setActiveSidebar: (activeSidebar) =>
     set(() => ({ activeSidebar: activeSidebar })),
   setActiveContact: (activeContact) =>

@@ -11,13 +11,15 @@ export default function ContactMenu() {
   );
   const setActiveContact = useStore((state) => state.setActiveContact);
   const handleClick = (id) => {
+    if (id === 0) {
+      setOpenChat(false);
+    }
     setActiveContact(id);
-    setOpenChat(false);
     addProvisionalDataAccount([]);
   };
   return (
-    <div className="h-full w-[30%] border-gray-100 border-r-2">
-      <div className="h-full py-5">
+    <div className="h-full border-gray-100 border-r-2">
+      <div className="h-full w-[22rem] py-5">
         <div className="mx-5 mb-5">
           <p className="font-bold text-2xl">Bạn bè</p>
         </div>

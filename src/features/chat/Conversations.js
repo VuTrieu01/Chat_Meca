@@ -26,13 +26,13 @@ export default function Conversations(props) {
   const lastLoggedInTime = new Date();
   const handleChat = (item) => {
     if (props.chat.length >= 0) {
-      props.chat.map((item) => {
-        if (item.textFriend) {
+      props.chat
+        .filter((val) => val.newText === true && val.textFriend)
+        .map((item) => {
           update(child(dbRef, `Chat` + `/${item.uid}`), {
             newText: false,
           });
-        }
-      });
+        });
       set(ref(database, `Chat` + `/${uuid}`), {
         uid: uuid,
         accountId: currentUser.uid,
@@ -43,13 +43,13 @@ export default function Conversations(props) {
       });
     }
     if (props.chatFriend.length > 0) {
-      props.chatFriend.map((item) => {
-        if (item.text) {
+      props.chatFriend
+        .filter((val) => val.newText === true && val.text)
+        .map((item) => {
           update(child(dbRef, `Chat` + `/${item.uid}`), {
             newText: false,
           });
-        }
-      });
+        });
       set(ref(database, `Chat` + `/${uuid}`), {
         uid: uuid,
         accountId: item.uid,
@@ -61,7 +61,7 @@ export default function Conversations(props) {
     }
     setValues("");
     setActiveSidebar(0);
-    setOpenChatItem(true);
+    setOpenChatItem(item.uid);
   };
   const handleChange = (e) => {
     setValues(e.target.value);

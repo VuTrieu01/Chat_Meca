@@ -26,8 +26,6 @@ export default function Contact() {
         });
       }
     });
-  }, []);
-  useEffect(() => {
     onValue(child(dbRef, `Friends`), (snapshot) => {
       setFriends([]);
       const data = snapshot.val();
