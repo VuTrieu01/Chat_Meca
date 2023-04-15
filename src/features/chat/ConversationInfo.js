@@ -23,10 +23,10 @@ export default function ConversationInfo(props) {
     setOpenChangeFile(~openChangeFile);
   };
   return (
-    <div className="h-screen w-2/5 bg-white">
+    <div className="h-full w-2/5 bg-white">
       {provisionalDataAccount.map((item, index) => (
-        <div className="h-full p-3 border-gray-100 border-l-2" key={index}>
-          <div className="h-full w-full flex flex-col items-center">
+        <div className="h-full border-gray-100 border-l-2" key={index}>
+          <div className="w-full flex flex-col items-center">
             {item.active ? (
               <>
                 <div className="mb-[-4px] mt-2">

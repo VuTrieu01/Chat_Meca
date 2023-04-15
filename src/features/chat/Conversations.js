@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
 import Ping from "../../components/Ping";
 import { IoCall, IoSend } from "react-icons/io5";
@@ -9,12 +9,13 @@ import Scrollbar from "../../components/Scrollbar";
 import ChatContent from "./ChatContent";
 import OfflineTimeCounter from "../../components/OfflineTimeCounter";
 import { uid } from "uid";
-import { ref, set } from "firebase/database";
+import { child, ref, set, update } from "firebase/database";
 import { database } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
 import useStore from "../../zustand/store";
 
 export default function Conversations(props) {
+  const dbRef = ref(database);
   const uuid = uid();
   const { currentUser } = useAuth();
   const provisionalDataAccount = props.provisionalDataAccount;
@@ -25,6 +26,13 @@ export default function Conversations(props) {
   const lastLoggedInTime = new Date();
   const handleChat = (item) => {
     if (props.chat.length >= 0) {
+      props.chat.map((item) => {
+        if (item.textFriend) {
+          update(child(dbRef, `Chat` + `/${item.uid}`), {
+            newText: false,
+          });
+        }
+      });
       set(ref(database, `Chat` + `/${uuid}`), {
         uid: uuid,
         accountId: currentUser.uid,
@@ -35,6 +43,13 @@ export default function Conversations(props) {
       });
     }
     if (props.chatFriend.length > 0) {
+      props.chatFriend.map((item) => {
+        if (item.text) {
+          update(child(dbRef, `Chat` + `/${item.uid}`), {
+            newText: false,
+          });
+        }
+      });
       set(ref(database, `Chat` + `/${uuid}`), {
         uid: uuid,
         accountId: item.uid,
@@ -55,7 +70,7 @@ export default function Conversations(props) {
     <div className="h-screen w-full">
       {provisionalDataAccount.map((item, index) => (
         <div className="h-full w-full bg-gray-100" key={index}>
-          <div className="flex items-center justify-between bg-white p-3 border-gray-100 border-b-2">
+          <div className="h-[10%] flex items-center justify-between bg-white p-3 border-gray-100 border-b-2">
             {item.active ? (
               <div className="flex items-center">
                 <div className="flex items-end">
@@ -96,8 +111,8 @@ export default function Conversations(props) {
             <ChatContent chat={props.chat} />
             <ChatContent chatFriend={props.chatFriend} />
           </Scrollbar>
-          <div className="flex items-center bg-white px-10 py-[0.90rem]">
-            <div className="relative w-full h-full">
+          <div className="h-[10%] flex items-center bg-white px-10">
+            <div className="relative w-full">
               <textarea
                 className="block w-full h-12 p-3 pr-16 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0 resize-none"
                 placeholder="Aa"

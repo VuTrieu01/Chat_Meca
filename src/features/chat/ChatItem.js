@@ -1,10 +1,13 @@
+import { child, ref, update } from "firebase/database";
 import React from "react";
 import Avatar from "../../components/Avatar";
 import Ping from "../../components/Ping";
 import useStore from "../../zustand/store";
 import { ConvertNumberToTime } from "../../components/ConvertNumberToTime";
+import { database } from "../../firebase";
 
 export default function ChatItem(props) {
+  const dbRef = ref(database);
   const addProvisionalDataAccount = useStore(
     (state) => state.addProvisionalDataAccount
   );
@@ -35,6 +38,16 @@ export default function ChatItem(props) {
   const handleClick = (item) => {
     setOpenChat(true);
     addProvisionalDataAccount([item]);
+    chat.map((item) =>
+      update(child(dbRef, `Chat` + `/${item.uid}`), {
+        newText: false,
+      })
+    );
+    chatFriend.map((item) =>
+      update(child(dbRef, `Chat` + `/${item.uid}`), {
+        newText: false,
+      })
+    );
   };
   return (
     <>
@@ -62,19 +75,19 @@ export default function ChatItem(props) {
                 </div>
                 {lastItemChat.map((item, index) =>
                   item.newText ? (
-                    <>
-                      <div
-                        key={index}
-                        className="w-36 font-bold text-green-600 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis"
-                      >
+                    <div key={index}>
+                      <div className="w-36 font-bold text-green-600 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
                         {item.textFriend}
                       </div>
                       <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
                         {item.text}
                       </div>
-                    </>
+                    </div>
                   ) : (
-                    <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div
+                      key={index}
+                      className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis"
+                    >
                       {item.text}
                       {item.textFriend}
                     </div>
@@ -83,17 +96,23 @@ export default function ChatItem(props) {
               </div>
               <div className="flex flex-col items-end">
                 {lastItemChat.map((item, index) => (
-                  <div className="text-gray-400 text-sm" key={index}>
-                    {ConvertNumberToTime(item.lastLoggedInTime)}
+                  <div key={index}>
+                    <div className="text-gray-400 text-sm">
+                      {ConvertNumberToTime(item.lastLoggedInTime)}
+                    </div>
+                    {item.newText && item.textFriend ? (
+                      <div className="flex items-center justify-center h-5 w-5 p-2 bg-red-600 text-white font-bold rounded-full text-xs">
+                        {
+                          chat.filter(
+                            (val) => val.newText === true && val.textFriend
+                          ).length
+                        }
+                      </div>
+                    ) : (
+                      <div className="h-5 w-5 p-2" />
+                    )}
                   </div>
                 ))}
-                {props.newChat ? (
-                  <div className="flex items-center justify-center h-5 w-5 p-2 bg-red-600 text-white font-bold rounded-full text-xs">
-                    1
-                  </div>
-                ) : (
-                  <div className="h-5 w-5 p-2" />
-                )}
               </div>
             </div>
           </div>
@@ -123,19 +142,19 @@ export default function ChatItem(props) {
                 </div>
                 {lastItemChatFriend.map((item, index) =>
                   item.newText ? (
-                    <>
-                      <div
-                        key={index}
-                        className="w-36 font-bold text-green-600 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis"
-                      >
+                    <div key={index}>
+                      <div className="w-36 font-bold text-green-600 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
                         {item.text}
                       </div>
                       <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
                         {item.textFriend}
                       </div>
-                    </>
+                    </div>
                   ) : (
-                    <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div
+                      key={index}
+                      className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis"
+                    >
                       {item.text}
                       {item.textFriend}
                     </div>
@@ -144,17 +163,23 @@ export default function ChatItem(props) {
               </div>
               <div className="flex flex-col items-end">
                 {lastItemChatFriend.map((item, index) => (
-                  <div className="text-gray-400 text-sm" key={index}>
-                    {ConvertNumberToTime(item.lastLoggedInTime)}
+                  <div key={index}>
+                    <div className="text-gray-400 text-sm">
+                      {ConvertNumberToTime(item.lastLoggedInTime)}
+                    </div>
+                    {item.newText && item.text ? (
+                      <div className="flex items-center justify-center h-5 w-5 p-2 bg-red-600 text-white font-bold rounded-full text-xs">
+                        {
+                          chatFriend.filter(
+                            (val) => val.newText === true && val.text
+                          ).length
+                        }
+                      </div>
+                    ) : (
+                      <div className="h-5 w-5 p-2" />
+                    )}
                   </div>
                 ))}
-                {props.newChat ? (
-                  <div className="flex items-center justify-center h-5 w-5 p-2 bg-red-600 text-white font-bold rounded-full text-xs">
-                    1
-                  </div>
-                ) : (
-                  <div className="h-5 w-5 p-2" />
-                )}
               </div>
             </div>
           </div>
