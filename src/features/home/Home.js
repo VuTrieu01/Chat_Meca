@@ -8,6 +8,7 @@ import Chat from "../chat/Chat";
 import Contact from "../contacts/Contact";
 import DatePage from "../date/DatePage";
 import { database } from "../../firebase";
+import Calendar from "../date/Calendar";
 
 export default function Home() {
   const dbRef = ref(database);
@@ -54,7 +55,7 @@ export default function Home() {
         <Sidebar />
         {activeSidebar === 0 && <Chat />}
         {activeSidebar === 1 && <Contact />}
-        {activeSidebar === 2 && <DatePage />}
+        {activeSidebar === 2 && <Calendar />}
         {activeSidebar === 3 && <DatePage />}
       </div>
     </div>
