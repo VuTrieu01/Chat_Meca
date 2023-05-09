@@ -4,6 +4,7 @@ import CalendarHeader from "./CalendarHeader ";
 import CalendarBody from "./CalendarBody";
 import EventForm from "./EventForm";
 import CalendarLeft from "./CalendarLeft";
+import CalendarRight from "./CalendarRight";
 
 const Calendar = () => {
   const [date, setDate] = useState(moment);
@@ -37,6 +38,7 @@ const Calendar = () => {
           prevMonth={prevMonth}
           setDate={setDate}
         />
+        <CalendarRight />
         {/* <CalendarHeader date={date} nextMonth={nextMonth} prevMonth={prevMonth} />
       <CalendarBody
         date={date}

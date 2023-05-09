@@ -1,5 +1,10 @@
 import React from "react";
+import TimeTable from "./TimeTable";
 
 export default function CalendarRight() {
-  return <div>CalendarRight</div>;
+  return (
+    <div>
+      <TimeTable />
+    </div>
+  );
 }

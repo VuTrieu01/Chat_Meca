@@ -55,9 +55,10 @@ export default function CalendarLeftBody({ date, today, setDate }) {
                   className="text-center"
                 >
                   <div
-                    className={`px-2 py-1.5 text-xs font-medium cursor-pointer rounded-full hover:bg-gray-100 ${
-                      day.format("DD-MM-YYYY") === today.format("DD-MM-YYYY") &&
-                      "bg-blue-500 text-white hover:bg-blue-500"
+                    className={`px-2 py-1.5 text-sm font-medium cursor-pointer rounded-full ${
+                      day.format("DD-MM-YYYY") === today.format("DD-MM-YYYY")
+                        ? "bg-blue-500 text-white"
+                        : "hover:bg-gray-100"
                     } ${
                       day.format("MM") !== date.format("MM") && "text-gray-400 "
                     }`}
