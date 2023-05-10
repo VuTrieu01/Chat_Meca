@@ -1,31 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 
 const TimeTable = () => {
-  // Tạo mảng thời gian từ 1h đến 24h với khoảng cách là 30 phút
-  const times = [];
-  const startTime = moment().startOf("day");
+  const startDate = moment().startOf("week").add(1, "day"); // Bắt đầu từ Thứ hai
+  const endDate = moment().startOf("week").add(7, "day"); // Kết thúc vào Chủ nhật
+
+  const timeBlocks = [];
   for (let i = 0; i < 24; i++) {
-    times.push(startTime.add(60, "minutes").format("HH:mm"));
+    const time = moment().set({ hour: i, minute: 0, second: 0 });
+    timeBlocks.push(
+      <div key={time.format("HH:mm")} className="time-block">
+        {time.format("h:mm A")}
+      </div>
+    );
+  }
+
+  const daysOfWeekBlocks = [];
+  while (startDate.isBefore(endDate)) {
+    const dayOfWeek = startDate.format("dddd");
+    daysOfWeekBlocks.push(
+      <div key={startDate.format("DD-MM-YYYY")} className="day-of-week">
+        {dayOfWeek} {startDate.format("DD")}
+      </div>
+    );
+    startDate.add(1, "day");
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Time</th>
-          <th>Event</th>
-        </tr>
-      </thead>
-      <tbody>
-        {times.map((time) => (
-          <tr key={time}>
-            <td>{time}</td>
-            <td></td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="calendar">
+      <div className="day-of-week-row">{daysOfWeekBlocks}</div>
+      <div className="time-column">{timeBlocks}</div>
+    </div>
   );
 };
 
