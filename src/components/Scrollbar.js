@@ -11,10 +11,12 @@ export default function Scrollbar(props) {
   }, []);
   return (
     <div
-      className="h-4/5 overflow-x-hidden select-none scrollbar focus:scroll-smooth"
+      className={`${
+        props.height ? props.height : "h-4/5"
+      } overflow-x-hidden select-none scrollbar focus:scroll-smooth cursor-pointer`}
       ref={props.messageEl}
     >
-      <div className={`${props.sx}`}>{props.children}</div>
+      <div className={`${props.sx} cursor-auto`}>{props.children}</div>
     </div>
   );
 }

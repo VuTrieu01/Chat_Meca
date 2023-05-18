@@ -1,10 +1,10 @@
 import React from "react";
-import TimeTable from "./TimeTable";
+import WeekList from "./WeekList";
 
-export default function CalendarRight() {
+export default function CalendarRight({ date, today }) {
   return (
     <div>
-      <TimeTable />
+      <WeekList date={date} today={today} />
     </div>
   );
 }

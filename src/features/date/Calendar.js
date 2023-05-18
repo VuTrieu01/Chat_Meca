@@ -28,9 +28,14 @@ const Calendar = () => {
     setEvents((prevEvents) => prevEvents.filter((e) => e !== event));
   };
   return (
-    <div className="h-screen w-full">
-      <CalendarHeader date={date} nextMonth={nextMonth} prevMonth={prevMonth} />
-      <div className="w-full flex">
+    <div className="h-full w-full">
+      <CalendarHeader
+        date={date}
+        setDate={setDate}
+        nextMonth={nextMonth}
+        prevMonth={prevMonth}
+      />
+      <div className="h-4/5 w-full flex">
         <CalendarLeft
           date={date}
           today={today}
@@ -38,7 +43,7 @@ const Calendar = () => {
           prevMonth={prevMonth}
           setDate={setDate}
         />
-        <CalendarRight />
+        <CalendarRight date={date} today={today} />
         {/* <CalendarHeader date={date} nextMonth={nextMonth} prevMonth={prevMonth} />
       <CalendarBody
         date={date}
