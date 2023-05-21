@@ -1,7 +1,8 @@
 import React from "react";
 import { LunarDate } from "vietnamese-lunar-calendar";
+import { GoPrimitiveDot } from "react-icons/go";
 
-export default function CalendarLeftBody({ date, today, setDate }) {
+export default function CalendarLeftBody({ date, today, setDate, getHoliday }) {
   const startOfMonth = date.clone().startOf("month");
   const endOfMonth = date.clone().endOf("month");
   const startOfWeek = startOfMonth.clone().startOf("week");
@@ -32,17 +33,17 @@ export default function CalendarLeftBody({ date, today, setDate }) {
   };
 
   return (
-    <div>
+    <div className="mt-2">
       <table className="table-auto">
         <thead>
           <tr>
-            <th className="px-2 py-1 text-xs">CN</th>
-            <th className="px-2 py-1 text-xs">T2</th>
-            <th className="px-2 py-1 text-xs">T4</th>
-            <th className="px-2 py-1 text-xs">T5</th>
-            <th className="px-2 py-1 text-xs">T3</th>
-            <th className="px-2 py-1 text-xs">T6</th>
-            <th className="px-2 py-1 text-xs">T7</th>
+            <th className="px-2 text-xs">T2</th>
+            <th className="px-2 text-xs">T3</th>
+            <th className="px-2 text-xs">T4</th>
+            <th className="px-2 text-xs">T5</th>
+            <th className="px-2 text-xs">T6</th>
+            <th className="px-2 text-xs">T7</th>
+            <th className="px-2 text-xs">CN</th>
           </tr>
         </thead>
         <tbody>
@@ -55,9 +56,9 @@ export default function CalendarLeftBody({ date, today, setDate }) {
                   className="text-center"
                 >
                   <div
-                    className={`px-2 py-1.5 text-sm font-medium cursor-pointer rounded-full ${
+                    className={`w-6 py-1 text-xs font-semibold cursor-pointer rounded-full ${
                       day.format("DD-MM-YYYY") === today.format("DD-MM-YYYY")
-                        ? "bg-blue-500 text-white"
+                        ? "bg-green-500 text-white"
                         : "hover:bg-gray-100"
                     } ${
                       day.format("MM") !== date.format("MM") && "text-gray-400 "
@@ -66,7 +67,7 @@ export default function CalendarLeftBody({ date, today, setDate }) {
                     {day.format("D")}
                   </div>
                   <div
-                    className={`text-xs  ${
+                    className={`w-6 text-xs  ${
                       day.format("MM") !== date.format("MM")
                         ? "text-gray-400"
                         : "text-gray-600"
@@ -74,6 +75,15 @@ export default function CalendarLeftBody({ date, today, setDate }) {
                   >
                     {getLunarDate(day)}
                   </div>
+                  {getHoliday(day).length > 0 ? (
+                    <div className="text-green-600 text-xs w-6 flex items-center justify-center">
+                      <GoPrimitiveDot />
+                    </div>
+                  ) : (
+                    <div className="text-white text-xs">
+                      <GoPrimitiveDot />
+                    </div>
+                  )}
                 </td>
               ))}
             </tr>

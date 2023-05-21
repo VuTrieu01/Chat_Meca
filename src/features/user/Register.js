@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 import { BiShow, BiHide } from "react-icons/bi";
-import DatePicker from "../../components/DatePicker";
+import DateInput from "../../components/DateInput";
 import RadioButton from "../../components/RadioButton";
 import { IoAlertCircleSharp } from "react-icons/io5";
 import Validation from "./Validation";
 import { child, onValue, ref, set } from "firebase/database";
 import { database } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
+import moment from "moment";
 
 export default function Register() {
   const [isVisible, setVisible] = useState(false);
@@ -36,7 +37,10 @@ export default function Register() {
     setPasswordConfirm(!passwordConfirm);
   };
   const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
+    if (e.target) setValues({ ...values, [e.target.name]: e.target.value });
+  };
+  const handleDateOfBirth = (date, name) => {
+    setValues({ ...values, [name]: date });
   };
   useEffect(() => {
     onValue(child(dbRef, `Account`), (snapshot) => {
@@ -83,7 +87,7 @@ export default function Register() {
               lastName: values.lastName,
               firstName: values.firstName,
               email: values.email,
-              dateOfBirth: values.dateOfBirth,
+              dateOfBirth: moment(values.dateOfBirth).format("YYYY-MM-DD"),
               gender: values.gender,
             })
               .then(() => {
@@ -216,14 +220,13 @@ export default function Register() {
                     {errors.dateOfBirth}
                   </div>
                 )}
-                <DatePicker
-                  type="date"
+                <DateInput
                   placeholder="Ngày sinh"
                   sx="w-80 md:w-full mb-3"
                   error={errors.dateOfBirth ? "border-red-500" : ""}
-                  value={values.dateOfBirth}
-                  name="dateOfBirth"
-                  onChange={handleChange}
+                  selected={values.dateOfBirth}
+                  dateFormat="dd/MM/yyyy"
+                  onChange={(date) => handleDateOfBirth(date, "dateOfBirth")}
                 />
                 <RadioButton
                   onChange={handleChange}

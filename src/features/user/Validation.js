@@ -31,7 +31,9 @@ const Validation = (values) => {
   if (!values.dateOfBirth) {
     errors.dateOfBirth = "Ngày sinh không được để trống!!!";
   }
-
+  if (!values.title) {
+    errors.title = "Tiêu đề không được để trống!!!";
+  }
   return errors;
 };
 

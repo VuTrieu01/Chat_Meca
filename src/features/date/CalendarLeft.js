@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import CalendarLeftBody from "./CalendarLeftBody";
 import CalendarLeftHeader from "./CalendarLeftHeader";
-import moment from "moment";
 
 export default function CalendarLeft({
   date,
@@ -9,6 +8,7 @@ export default function CalendarLeft({
   nextMonth,
   prevMonth,
   setDate,
+  getHoliday,
 }) {
   return (
     <div className="mx-4">
@@ -17,7 +17,12 @@ export default function CalendarLeft({
         nextMonth={nextMonth}
         prevMonth={prevMonth}
       />
-      <CalendarLeftBody date={date} today={today} setDate={setDate} />
+      <CalendarLeftBody
+        date={date}
+        today={today}
+        setDate={setDate}
+        getHoliday={getHoliday}
+      />
     </div>
   );
 }

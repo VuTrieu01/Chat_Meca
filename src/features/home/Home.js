@@ -6,7 +6,6 @@ import useStore from "../../zustand/store";
 import { useAuth } from "../../context/AuthContext";
 import Chat from "../chat/Chat";
 import Contact from "../contacts/Contact";
-import DatePage from "../date/DatePage";
 import { database } from "../../firebase";
 import Calendar from "../date/Calendar";
 
@@ -56,7 +55,7 @@ export default function Home() {
         {activeSidebar === 0 && <Chat />}
         {activeSidebar === 1 && <Contact />}
         {activeSidebar === 2 && <Calendar />}
-        {activeSidebar === 3 && <DatePage />}
+        {activeSidebar === 3 && <Calendar />}
       </div>
     </div>
   );
