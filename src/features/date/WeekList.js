@@ -57,6 +57,7 @@ export default function WeekList({ date, today, getHoliday }) {
             <div key={index}>
               <p className="text-xs bg-green-500 text-white font-bold p-1 rounded-sm m-1">
                 {item.name}
+                {console.log(item.date)}
               </p>
             </div>
           ))}
