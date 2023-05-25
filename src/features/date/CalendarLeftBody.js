@@ -1,8 +1,15 @@
 import React from "react";
 import { LunarDate } from "vietnamese-lunar-calendar";
 import { GoPrimitiveDot } from "react-icons/go";
+import moment from "moment";
 
-export default function CalendarLeftBody({ date, today, setDate, getHoliday }) {
+export default function CalendarLeftBody({
+  date,
+  today,
+  setDate,
+  getHoliday,
+  dataEvent,
+}) {
   const startOfMonth = date.clone().startOf("month");
   const endOfMonth = date.clone().endOf("month");
   const startOfWeek = startOfMonth.clone().startOf("week");
@@ -31,7 +38,12 @@ export default function CalendarLeftBody({ date, today, setDate, getHoliday }) {
     }
     return lunarDate.date;
   };
-
+  const getDataEvent = (day) => {
+    const date = moment(day).format("DD-MM-YYYY");
+    return dataEvent.filter((val) =>
+      moment(new Date(val.time)).format("DD-MM-YYYY").includes(date)
+    );
+  };
   return (
     <div className="mt-2">
       <table className="table-auto">
@@ -75,7 +87,8 @@ export default function CalendarLeftBody({ date, today, setDate, getHoliday }) {
                   >
                     {getLunarDate(day)}
                   </div>
-                  {getHoliday(day).length > 0 ? (
+                  {getHoliday(day).length > 0 ||
+                  getDataEvent(day).length > 0 ? (
                     <div className="text-green-600 text-xs w-6 flex items-center justify-center">
                       <GoPrimitiveDot />
                     </div>

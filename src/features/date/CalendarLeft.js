@@ -9,6 +9,7 @@ export default function CalendarLeft({
   prevMonth,
   setDate,
   getHoliday,
+  dataEvent,
 }) {
   return (
     <div className="mx-4">
@@ -22,6 +23,7 @@ export default function CalendarLeft({
         today={today}
         setDate={setDate}
         getHoliday={getHoliday}
+        dataEvent={dataEvent}
       />
     </div>
   );
