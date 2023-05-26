@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import moment from "moment";
-
 import TimeTable from "./TimeTable";
 import Scrollbar from "../../components/Scrollbar";
 
@@ -16,15 +15,6 @@ export default function WeekList({ date, today, getHoliday, dataEvent }) {
       moment(new Date(val.time)).format("DD-MM-YYYY").includes(date)
     );
   };
-  const timeBlocks = [];
-  for (let i = 0; i < 24; i++) {
-    const time = moment().set({ hour: i, minute: 0, second: 0 });
-    timeBlocks.push(
-      <div key={time.format("HH:mm")} className="time-block">
-        {time.format("h:mm A")}
-      </div>
-    );
-  }
 
   const daysOfWeekBlocks = [];
   while (startDate.isBefore(endDate)) {
@@ -99,7 +89,7 @@ export default function WeekList({ date, today, getHoliday, dataEvent }) {
       </table>
       <Scrollbar height="h-[80%]">
         <table className="table-auto">
-          <TimeTable />
+          <TimeTable date={date} dataEvent={dataEvent} />
         </table>
       </Scrollbar>
     </div>
