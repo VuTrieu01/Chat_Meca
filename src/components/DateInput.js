@@ -24,7 +24,7 @@ export default function DateInput(props) {
           }
           minDate={props.minDate}
           maxDate={props.maxDate}
-          showTimeInput
+          showTimeInput={props.showTimeInput ? true : false}
           onFocus={handleFocus}
           onBlur={() => setClick("")}
         />

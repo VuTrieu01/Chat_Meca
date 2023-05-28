@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/vi";
 import Scrollbar from "../../components/Scrollbar";
+import { TiDeleteOutline } from "react-icons/ti";
+import EventForm from "./EventForm";
 
 const TimeTable = ({ date, dataEvent }) => {
+  const [open, setOpen] = useState("hidden");
   const [dateTable, setDateTable] = useState([]);
   const getDataEvent = (time, day) => {
     const dates = moment(day).format("DD-MM-YYYY");
@@ -13,6 +16,12 @@ const TimeTable = ({ date, dataEvent }) => {
         val.allDay === false &&
         times.includes(moment(new Date(val.time)).format("DD-MM-YYYY H:mm"))
     );
+  };
+  const openButton = () => {
+    setOpen("");
+  };
+  const closeButton = () => {
+    setOpen("hidden");
   };
   useEffect(() => {
     const newDate = [];
@@ -44,9 +53,19 @@ const TimeTable = ({ date, dataEvent }) => {
                   (item, index) =>
                     item.allDay === false && (
                       <div key={index}>
-                        <p className="text-xs bg-green-500 text-white font-bold p-1 rounded-sm m-1">
+                        <p
+                          onClick={openButton}
+                          className="text-xs bg-green-500 text-white font-bold p-1 rounded-sm m-1 cursor-pointer"
+                        >
                           {item.title}
                         </p>
+                        <EventForm
+                          title="Việc cần làm"
+                          open={open}
+                          closeButton={closeButton}
+                          edit
+                          deleteItem
+                        />
                       </div>
                     )
                 )}

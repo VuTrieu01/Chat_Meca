@@ -41,7 +41,6 @@ const Calendar = () => {
       return {
         name: holiday.name,
         date: solarDate,
-        allDay: true,
       };
     });
     setHolidays(holidayList);

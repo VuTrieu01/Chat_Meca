@@ -50,7 +50,12 @@ const CalendarHeader = ({ date, setDate }) => {
       >
         +
       </Button>
-      <EventForm open={open} closeButton={closeButton} />
+      <EventForm
+        title="Tạo việc cần làm"
+        open={open}
+        closeButton={closeButton}
+        save
+      />
     </div>
   );
 };

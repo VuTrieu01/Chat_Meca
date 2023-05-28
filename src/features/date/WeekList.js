@@ -51,7 +51,7 @@ export default function WeekList({ date, today, getHoliday, dataEvent }) {
         <Scrollbar height="h-24">
           {getHoliday(startHoliday).map((item, index) => (
             <div key={index}>
-              <p className="text-xs bg-green-500 text-white font-bold p-1 rounded-sm m-1">
+              <p className="text-xs bg-blue-500 text-white font-bold p-1 rounded-sm m-1">
                 {item.name}
               </p>
             </div>

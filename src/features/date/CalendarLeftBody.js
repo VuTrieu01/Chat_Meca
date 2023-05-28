@@ -87,16 +87,24 @@ export default function CalendarLeftBody({
                   >
                     {getLunarDate(day)}
                   </div>
-                  {getHoliday(day).length > 0 ||
-                  getDataEvent(day).length > 0 ? (
-                    <div className="text-green-600 text-xs w-6 flex items-center justify-center">
-                      <GoPrimitiveDot />
-                    </div>
-                  ) : (
-                    <div className="text-white text-xs">
-                      <GoPrimitiveDot />
-                    </div>
-                  )}
+                  <div className="flex justify-center w-6">
+                    {getHoliday(day).length > 0 && (
+                      <div className="text-blue-600 text-xs flex items-center justify-center">
+                        <GoPrimitiveDot />
+                      </div>
+                    )}
+                    {getDataEvent(day).length > 0 && (
+                      <div className="text-green-600 text-xs flex items-center justify-center">
+                        <GoPrimitiveDot />
+                      </div>
+                    )}
+                    {getHoliday(day).length === 0 &&
+                      getDataEvent(day).length === 0 && (
+                        <div className="text-white text-xs">
+                          <GoPrimitiveDot />
+                        </div>
+                      )}
+                  </div>
                 </td>
               ))}
             </tr>
