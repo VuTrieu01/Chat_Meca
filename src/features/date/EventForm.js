@@ -5,23 +5,34 @@ import DateInput from "../../components/DateInput";
 import { uid } from "uid";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../firebase";
-import { ref, set } from "firebase/database";
+import { child, ref, set, update } from "firebase/database";
 import Validation from "../../features/user/Validation";
 import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { IoAlertCircleSharp, IoCloseSharp } from "react-icons/io5";
 import CheckBox from "../../components/CheckBox";
+import MessengerBox from "../../components/MessengerBox";
 
-const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
+const EventForm = ({
+  title,
+  editEvent,
+  deleteItem,
+  open,
+  closeButton,
+  dataEvent,
+}) => {
   const uuid = uid();
+  const dbRef = ref(database);
   const { currentUser } = useAuth();
   const [values, setValues] = useState({
-    title: "",
-    contents: "",
-    time: new Date(),
-    allDay: true,
+    title: dataEvent ? dataEvent.title : "",
+    contents: dataEvent ? dataEvent.contents : "",
+    time: dataEvent ? new Date(dataEvent.time) : new Date(),
+    allDay: dataEvent ? dataEvent.allDay : true,
   });
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(values.allDay);
   const [errors, setErrors] = useState({});
+  const [edit, setEdit] = useState(editEvent);
+  const [openMessenger, setOpenMessenger] = useState("hidden");
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -32,6 +43,12 @@ const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
     setChecked(!checked);
     setValues({ ...values, allDay: !checked });
   };
+  const handleEdit = () => {
+    setEdit(false);
+  };
+  const handleDelete = () => {
+    setOpenMessenger("");
+  };
   const handleClose = () => {
     setValues({ title: "", contents: "", time: new Date(), allDay: true });
     setChecked(true);
@@ -40,17 +57,37 @@ const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
   const handleSubmit = () => {
     setErrors(Validation(values));
     if (values.title !== "") {
-      set(ref(database, `Event` + `/${uuid}`), {
-        uid: uuid,
-        accountId: currentUser.uid,
-        title: values.title,
-        contents: values.contents,
-        time: values.time.toString(),
-        allDay: values.allDay,
-      });
-      setValues({ title: "", contents: "", time: new Date(), allDay: true });
-      setChecked(true);
-      closeButton();
+      if (!edit) {
+        return (
+          update(child(dbRef, `Event` + `/${dataEvent.uid}`), {
+            title: values.title,
+            contents: values.contents,
+            time: values.time.toString(),
+            allDay: values.allDay,
+          }),
+          setValues({
+            title: "",
+            contents: "",
+            time: new Date(),
+            allDay: true,
+          }),
+          setChecked(true),
+          closeButton()
+        );
+      }
+      return (
+        set(ref(database, `Event` + `/${uuid}`), {
+          uid: uuid,
+          accountId: currentUser.uid,
+          title: values.title,
+          contents: values.contents,
+          time: values.time.toString(),
+          allDay: values.allDay,
+        }),
+        setValues({ title: "", contents: "", time: new Date(), allDay: true }),
+        setChecked(true),
+        closeButton()
+      );
     }
   };
   return (
@@ -65,18 +102,25 @@ const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
           {edit && (
             <div
               className="cursor-pointer hover:bg-gray-200 p-2 rounded-full"
-              onClick={handleClose}
+              onClick={handleEdit}
             >
               <AiOutlineEdit />
             </div>
           )}
           {deleteItem && (
-            <div
-              className="cursor-pointer hover:bg-gray-200 p-2 rounded-full"
-              onClick={handleClose}
-            >
-              <AiOutlineDelete />
-            </div>
+            <>
+              <div
+                className="cursor-pointer hover:bg-gray-200 p-2 rounded-full"
+                onClick={handleDelete}
+              >
+                <AiOutlineDelete />
+              </div>
+              <MessengerBox
+                data={dataEvent}
+                openMessenger={openMessenger}
+                closeMessenger={setOpenMessenger}
+              />
+            </>
           )}
           <div
             className="cursor-pointer hover:bg-gray-200 p-2 rounded-full"
@@ -102,6 +146,7 @@ const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
               error={errors.title ? "border-red-500" : ""}
               value={values.title}
               onChange={handleChange}
+              disabled={edit ? true : false}
             />
           </div>
           <TextField
@@ -111,6 +156,7 @@ const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
             name="contents"
             value={values.contents}
             onChange={handleChange}
+            disabled={edit ? true : false}
           />
           <DateInput
             placeholder="Thời gian"
@@ -120,11 +166,16 @@ const EventForm = ({ title, edit, deleteItem, save, open, closeButton }) => {
             onChange={(date) => handleDateOfBirth(date, "time")}
             minDate={new Date()}
             showTimeInput={!checked ? true : false}
+            disabled={edit ? true : false}
           />
-          <CheckBox checked={checked} onChange={handleChecked} />
+          <CheckBox
+            checked={checked}
+            onChange={handleChecked}
+            disabled={edit ? true : false}
+          />
         </div>
         <div className="flex justify-end">
-          {save && (
+          {!edit && (
             <Button sx="bg-green-500 hover:bg-green-600" onClick={handleSubmit}>
               Lưu
             </Button>

@@ -6,11 +6,13 @@ import CalendarRight from "./CalendarRight";
 import Holidays from "date-holidays";
 import { child, onValue, ref } from "firebase/database";
 import { database } from "../../firebase";
+import { useAuth } from "../../context/AuthContext";
 
 const Calendar = () => {
   const [date, setDate] = useState(moment);
   const [dataEvent, setDataEvent] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
   const dbRef = ref(database);
   const today = moment();
   const [holidays, setHolidays] = useState([]);
@@ -22,6 +24,10 @@ const Calendar = () => {
   const prevMonth = () => {
     setDate(date.clone().subtract(1, "month"));
   };
+  const listEvent = dataEvent.filter((val) =>
+    val.accountId.includes(currentUser.uid)
+  );
+
   useEffect(() => {
     onValue(child(dbRef, `Event`), (snapshot) => {
       setDataEvent([]);
@@ -70,13 +76,13 @@ const Calendar = () => {
               prevMonth={prevMonth}
               setDate={setDate}
               getHoliday={getHoliday}
-              dataEvent={dataEvent}
+              dataEvent={listEvent}
             />
             <CalendarRight
               date={date}
               today={today}
               getHoliday={getHoliday}
-              dataEvent={dataEvent}
+              dataEvent={listEvent}
             />
           </div>
         </>
