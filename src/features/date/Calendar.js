@@ -44,6 +44,7 @@ const Calendar = () => {
     const holidayList = Object.keys(hdList).map((key) => {
       const holiday = hdList[key];
       const solarDate = holiday.start;
+      setLoading(false);
       return {
         name: holiday.name,
         date: solarDate,

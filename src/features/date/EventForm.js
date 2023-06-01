@@ -11,6 +11,7 @@ import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import { IoAlertCircleSharp, IoCloseSharp } from "react-icons/io5";
 import CheckBox from "../../components/CheckBox";
 import MessengerBox from "../../components/MessengerBox";
+import moment from "moment";
 
 const EventForm = ({
   title,
@@ -20,9 +21,9 @@ const EventForm = ({
   closeButton,
   dataEvent,
 }) => {
-  const uuid = uid();
   const dbRef = ref(database);
   const { currentUser } = useAuth();
+  const uuid = uid();
   const [values, setValues] = useState({
     title: dataEvent ? dataEvent.title : "",
     contents: dataEvent ? dataEvent.contents : "",
@@ -54,16 +55,23 @@ const EventForm = ({
     setChecked(true);
     closeButton();
   };
+  const handleDone = () => {
+    update(child(dbRef, `Event` + `/${dataEvent.uid}`), {
+      done: true,
+    });
+    closeButton();
+  };
   const handleSubmit = () => {
     setErrors(Validation(values));
     if (values.title !== "") {
-      if (!edit) {
+      if (editEvent) {
         return (
           update(child(dbRef, `Event` + `/${dataEvent.uid}`), {
             title: values.title,
             contents: values.contents,
             time: values.time.toString(),
             allDay: values.allDay,
+            done: false,
           }),
           setValues({
             title: "",
@@ -75,19 +83,22 @@ const EventForm = ({
           closeButton()
         );
       }
-      return (
-        set(ref(database, `Event` + `/${uuid}`), {
-          uid: uuid,
-          accountId: currentUser.uid,
-          title: values.title,
-          contents: values.contents,
-          time: values.time.toString(),
-          allDay: values.allDay,
-        }),
-        setValues({ title: "", contents: "", time: new Date(), allDay: true }),
-        setChecked(true),
-        closeButton()
-      );
+
+      set(ref(database, `Event` + `/${uuid}`), {
+        uid: uuid,
+        accountId: currentUser.uid,
+        title: values.title,
+        contents: values.contents,
+        time:
+          values.allDay === true
+            ? moment(values.time).startOf("day").toDate().toString()
+            : values.time.toString(),
+        allDay: values.allDay,
+        done: false,
+      });
+      setValues({ title: "", contents: "", time: new Date(), allDay: true });
+      setChecked(true);
+      closeButton();
     }
   };
   return (
@@ -101,6 +112,7 @@ const EventForm = ({
         <div className="flex justify-end">
           {edit && (
             <div
+              title="Chỉnh sửa"
               className="cursor-pointer hover:bg-gray-200 p-2 rounded-full"
               onClick={handleEdit}
             >
@@ -110,6 +122,7 @@ const EventForm = ({
           {deleteItem && (
             <>
               <div
+                title="Xóa"
                 className="cursor-pointer hover:bg-gray-200 p-2 rounded-full"
                 onClick={handleDelete}
               >
@@ -178,6 +191,11 @@ const EventForm = ({
           {!edit && (
             <Button sx="bg-green-500 hover:bg-green-600" onClick={handleSubmit}>
               Lưu
+            </Button>
+          )}
+          {edit && dataEvent.done !== true && (
+            <Button sx="bg-green-500 hover:bg-green-600" onClick={handleDone}>
+              Hoàn thành
             </Button>
           )}
         </div>

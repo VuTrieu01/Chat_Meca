@@ -54,7 +54,11 @@ const TimeTable = ({ date, dataEvent }) => {
                       <div key={index}>
                         <p
                           onClick={() => openButton(item.uid)}
-                          className="text-xs bg-green-500 text-white font-bold p-1 rounded-sm m-1 cursor-pointer"
+                          className={`text-xs font-bold p-1 rounded-sm m-1 cursor-pointer ${
+                            item.done === true
+                              ? "line-through bg-transparent text-gray-500"
+                              : "bg-green-500 text-white"
+                          }`}
                         >
                           {item.title}
                         </p>

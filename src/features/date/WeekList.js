@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import TimeTable from "./TimeTable";
 import Scrollbar from "../../components/Scrollbar";
+import EventForm from "./EventForm";
 
 export default function WeekList({ date, today, getHoliday, dataEvent }) {
   const startDate = date.clone().startOf("week").add(0, "day"); // Bắt đầu từ Thứ hai
   const endDate = date.clone().startOf("week").add(7, "day"); // Kết thúc vào Chủ nhật
   const startHoliday = date.clone().startOf("week").add(0, "day"); // Bắt đầu từ Thứ hai
   const endHoliday = date.clone().startOf("week").add(7, "day"); // Kết thúc vào Chủ nhật
-
+  const [open, setOpen] = useState();
+  const openButton = (uid) => {
+    setOpen(uid);
+  };
+  const closeButton = () => {
+    setOpen();
+  };
   const getDataEvent = (day) => {
     const date = moment(day).format("DD-MM-YYYY");
     return dataEvent.filter((val) =>
@@ -60,9 +67,26 @@ export default function WeekList({ date, today, getHoliday, dataEvent }) {
             (item, index) =>
               item.allDay === true && (
                 <div key={index}>
-                  <p className="text-xs bg-green-500 text-white font-bold p-1 rounded-sm m-1">
+                  <p
+                    onClick={() => openButton(item.uid)}
+                    className={`text-xs font-bold p-1 rounded-sm m-1 cursor-pointer ${
+                      item.done === true
+                        ? "line-through bg-transparent text-gray-500"
+                        : "bg-green-500 text-white"
+                    }`}
+                  >
                     {item.title}
                   </p>
+                  {item.uid === open && (
+                    <EventForm
+                      title="Việc cần làm"
+                      open={""}
+                      closeButton={closeButton}
+                      editEvent
+                      deleteItem
+                      dataEvent={item}
+                    />
+                  )}
                 </div>
               )
           )}
@@ -82,7 +106,7 @@ export default function WeekList({ date, today, getHoliday, dataEvent }) {
         </thead>
         <tbody>
           <tr>
-            <td className="border border-gray-200 border-b-0 h-24 w-16 text-gray-600 text-center"></td>
+            <td className="w-16 border border-gray-200 border-b-0 h-24 text-gray-600 text-center"></td>
             {listHoliday}
           </tr>
         </tbody>
