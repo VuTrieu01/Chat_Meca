@@ -3,7 +3,7 @@ import { FaUserAlt } from "react-icons/fa";
 
 export default function Avatar(props) {
   return (
-    <div className={`${props.sx}`} title={props.title}>
+    <div className={`${props.sx}`} title={props.title} onClick={props.onClick}>
       {props.url ? (
         <img
           className={`inline-block ${

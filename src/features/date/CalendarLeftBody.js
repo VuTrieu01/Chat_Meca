@@ -93,13 +93,13 @@ export default function CalendarLeftBody({
                         <GoPrimitiveDot />
                       </div>
                     )}
-                    {getDataEvent(day).length > 0 && (
+                    {getDataEvent(day).filter(item => item.done === false).length > 0 && (
                       <div className="text-green-600 text-xs flex items-center justify-center">
                         <GoPrimitiveDot />
                       </div>
                     )}
                     {getHoliday(day).length === 0 &&
-                      getDataEvent(day).length === 0 && (
+                      getDataEvent(day).filter(item => item.done === false).length === 0 && (
                         <div className="text-white text-xs">
                           <GoPrimitiveDot />
                         </div>

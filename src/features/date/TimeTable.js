@@ -14,7 +14,7 @@ const TimeTable = ({ date, dataEvent }) => {
       (val) =>
         val.allDay === false &&
         times.includes(moment(new Date(val.time)).format("DD-MM-YYYY H:mm"))
-    );
+    ).sort((a, b) => moment(a.time, 'H:mm').diff(moment(b.time, 'H:mm')));
   };
   const openButton = (uid) => {
     setOpen(uid);
