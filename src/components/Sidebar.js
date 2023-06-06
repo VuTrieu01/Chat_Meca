@@ -87,7 +87,7 @@ export default function Sidebar() {
                          .filter((val) => val.uid === currentUser.uid)
                          .map((item, index) => (
                               <div key={index}>
-                                   <Avatar title={item.email} sx="mx-2 my-10 cursor-pointer" size="h-12 w-12" onClick={openUserForm} />
+                                   <Avatar url={item.avatar} title={item.email} sx="mx-2 my-10 cursor-pointer" size="h-12 w-12" onClick={openUserForm} />
                                    <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} />
                               </div>
                          ))}

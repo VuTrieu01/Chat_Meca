@@ -12,6 +12,7 @@ import moment from "moment";
 import RadioButton from "../../components/RadioButton";
 import Avatar from "../../components/Avatar";
 import TextFieldArea from "../../components/TextFieldArea";
+import UploadAvatar from "./UploadAvatar";
 
 const UserForm = ({ openUser, closeUserForm, data }) => {
      const dbRef = ref(database);
@@ -26,7 +27,7 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
      });
      const [errors, setErrors] = useState({});
      const [edit, setEdit] = useState(true);
-
+     const [openUploadAvatar, closeUploadAvatar] = useState("hidden");
      const handleChange = (e) => {
           setValues({ ...values, [e.target.name]: e.target.value });
      };
@@ -41,6 +42,9 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
           setEdit(true);
           setErrors({});
           closeUserForm();
+     };
+     const handleUpload = () => {
+          if (!edit) closeUploadAvatar("");
      };
      const handleSubmit = () => {
           setErrors(Validation(values));
@@ -78,15 +82,22 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
                     <div className="text-2xl font-bold mb-2">Trang cá nhân</div>
                     <div className="py-2 border-t border-b border-gray-300 mb-2">
                          <div className="relative flex items-center flex-col mb-5">
-                              {data.coverPhoto ? (
+                              {!edit ? (
+                                   data.coverPhoto ? (
+                                        <div>Có hình</div>
+                                   ) : (
+                                        <div className="w-full h-52 flex items-center justify-center bg-gray-500 cursor-pointer hover:text-white">
+                                             <BiImageAdd className="h-8 w-8" />
+                                             <div className="font-bold">Thêm ảnh bìa</div>
+                                        </div>
+                                   )
+                              ) : data.coverPhoto ? (
                                    <div>Có hình</div>
                               ) : (
-                                   <div className="w-full h-48 flex items-center justify-center bg-gray-500 cursor-pointer hover:text-white">
-                                        <BiImageAdd className="h-8 w-8" />
-                                        <div className="font-bold">Thêm ảnh bìa</div>
-                                   </div>
+                                   <div className="w-full h-52 bg-gray-500"></div>
                               )}
-                              <Avatar sx="absolute bottom-[-2rem] cursor-pointer" size="h-24 w-24 border border-4 border-white" />
+                              <Avatar url={values.avatar} sx={`absolute bottom-[-2rem] ${!edit && "cursor-pointer"}`} size="h-24 w-24 border border-2 border-white" onClick={handleUpload} />
+                              {values.avatar || values.avatar === "" ? <UploadAvatar openUploadAvatar={openUploadAvatar} closeUploadAvatar={closeUploadAvatar} values={values} setValues={setValues} /> : ""}
                          </div>
                          <div className="text-xl font-bold mb-2">Chi tiết</div>
                          {!edit ? <TextFieldArea type="text" placeholder="Tiểu sử bản thân" sx="w-80 md:w-full mb-5" name="bio" value={values.bio} onChange={handleChange} disabled={edit ? true : false} /> : <div className="mb-5">{values.bio}</div>}
