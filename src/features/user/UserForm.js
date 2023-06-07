@@ -6,13 +6,15 @@ import { database } from "../../firebase";
 import { child, ref, update } from "firebase/database";
 import Validation from "../../features/user/Validation";
 import { AiOutlineEdit } from "react-icons/ai";
-import { BiImageAdd } from "react-icons/bi";
 import { IoAlertCircleSharp, IoCloseSharp } from "react-icons/io5";
+import { FaBirthdayCake } from "react-icons/fa";
+import { SlUserFemale, SlUser } from "react-icons/sl";
 import moment from "moment";
 import RadioButton from "../../components/RadioButton";
 import Avatar from "../../components/Avatar";
 import TextFieldArea from "../../components/TextFieldArea";
 import UploadAvatar from "./UploadAvatar";
+import Scrollbar from "../../components/Scrollbar";
 
 const UserForm = ({ openUser, closeUserForm, data }) => {
      const dbRef = ref(database);
@@ -28,6 +30,7 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
      const [errors, setErrors] = useState({});
      const [edit, setEdit] = useState(true);
      const [openUploadAvatar, closeUploadAvatar] = useState("hidden");
+     const [idd, setIdd] = useState(0);
      const handleChange = (e) => {
           setValues({ ...values, [e.target.name]: e.target.value });
      };
@@ -43,8 +46,11 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
           setErrors({});
           closeUserForm();
      };
-     const handleUpload = () => {
-          if (!edit) closeUploadAvatar("");
+     const handleUpload = (id) => {
+          if (!edit) {
+               closeUploadAvatar("");
+               setIdd(id);
+          }
      };
      const handleSubmit = () => {
           setErrors(Validation(values));
@@ -61,14 +67,13 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
                     });
                     setEdit(true);
                     setErrors({});
-                    closeUserForm();
                }
           }
      };
      return (
           <div>
                <div className={`fixed ${openUser} z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60`}></div>
-               <div className={`fixed ${openUser} z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/4 bg-white rounded-md px-8 py-6 drop-shadow-lg`}>
+               <div className={`fixed ${openUser} z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/5 bg-white rounded-md px-8 py-6 drop-shadow-lg`}>
                     <div className="flex justify-end">
                          {edit && (
                               <div title="Chỉnh sửa" className="cursor-pointer hover:bg-gray-200 p-2 rounded-full" onClick={handleEdit}>
@@ -79,64 +84,87 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
                               <IoCloseSharp />
                          </div>
                     </div>
-                    <div className="text-2xl font-bold mb-2">Trang cá nhân</div>
-                    <div className="py-2 border-t border-b border-gray-300 mb-2">
-                         <div className="relative flex items-center flex-col mb-5">
-                              {!edit ? (
-                                   data.coverPhoto ? (
-                                        <div>Có hình</div>
-                                   ) : (
-                                        <div className="w-full h-52 flex items-center justify-center bg-gray-500 cursor-pointer hover:text-white">
-                                             <BiImageAdd className="h-8 w-8" />
-                                             <div className="font-bold">Thêm ảnh bìa</div>
+                    <div className="text-lg font-bold mb-2">Trang cá nhân</div>
+                    <Scrollbar height="h-[30rem]" sx="mr-1">
+                         <>
+                              <div className="py-2 border-t border-b border-gray-300 mb-2">
+                                   <div className="relative flex items-center flex-col mb-8">
+                                        <div className={`w-full flex items-center justify-center bg-gray-500 ${!edit && "cursor-pointer hover:text-white"}`} onClick={() => handleUpload(0)}>
+                                             <img className="w-full h-[192px]" src={values.coverPhoto} alt="" />
                                         </div>
-                                   )
-                              ) : data.coverPhoto ? (
-                                   <div>Có hình</div>
-                              ) : (
-                                   <div className="w-full h-52 bg-gray-500"></div>
-                              )}
-                              <Avatar url={values.avatar} sx={`absolute bottom-[-2rem] ${!edit && "cursor-pointer"}`} size="h-24 w-24 border border-2 border-white" onClick={handleUpload} />
-                              {values.avatar || values.avatar === "" ? <UploadAvatar openUploadAvatar={openUploadAvatar} closeUploadAvatar={closeUploadAvatar} values={values} setValues={setValues} /> : ""}
-                         </div>
-                         <div className="text-xl font-bold mb-2">Chi tiết</div>
-                         {!edit ? <TextFieldArea type="text" placeholder="Tiểu sử bản thân" sx="w-80 md:w-full mb-5" name="bio" value={values.bio} onChange={handleChange} disabled={edit ? true : false} /> : <div className="mb-5">{values.bio}</div>}
-                         <div>
-                              {errors.lastName && (
-                                   <div className="flex items-center text-red-500 text-sm mb-1">
-                                        <IoAlertCircleSharp className="text-lg" />
-                                        {errors.lastName}
+                                        {idd === 0 && <UploadAvatar openUploadAvatar={openUploadAvatar} closeUploadAvatar={closeUploadAvatar} coverPhoto values={values} setValues={setValues} width={550} height={212} />}
+                                        <Avatar url={values.avatar} sx={`absolute bottom-[-2rem] ${!edit && "cursor-pointer"}`} size="h-24 w-24 border border-2 border-white" onClick={() => handleUpload(1)} />
+                                        {idd === 1 && <UploadAvatar openUploadAvatar={openUploadAvatar} closeUploadAvatar={closeUploadAvatar} values={values} setValues={setValues} />}
                                    </div>
-                              )}
-                              <TextField type="text" placeholder="Họ" sx="w-80 md:w-full mb-5" name="lastName" error={errors.lastName ? "border-red-500" : ""} value={values.lastName} onChange={handleChange} disabled={edit ? true : false} />
-                         </div>
-                         <div>
-                              {errors.firstName && (
-                                   <div className="flex items-center text-red-500 text-sm mb-1">
-                                        <IoAlertCircleSharp className="text-lg" />
-                                        {errors.firstName}
-                                   </div>
-                              )}
-                              <TextField type="text" placeholder="Tên" sx="w-80 md:w-full mb-5" name="firstName" error={errors.firstName ? "border-red-500" : ""} value={values.firstName} onChange={handleChange} disabled={edit ? true : false} />
-                         </div>
-                         <div>
-                              {errors.dateOfBirth && (
-                                   <div className="flex items-center text-red-500 text-sm mb-1">
-                                        <IoAlertCircleSharp className="text-lg" />
-                                        {errors.dateOfBirth}
-                                   </div>
-                              )}
-                              <DateInput placeholder="Ngày sinh" sx="w-80 md:w-full mb-3" error={errors.dateOfBirth ? "border-red-500" : ""} selected={values.dateOfBirth} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateOfBirth(date, "dateOfBirth")} disabled={edit ? true : false} />
-                         </div>
-                         <RadioButton onChange={handleChange} name="gender" checked={values.gender} disabled={edit ? true : false} />
-                    </div>
-                    <div className="flex justify-end">
-                         {!edit && (
-                              <Button sx="bg-green-500 hover:bg-green-600" onClick={handleSubmit}>
-                                   Cập nhật
-                              </Button>
-                         )}
-                    </div>
+                                   {edit ? (
+                                        <>
+                                             <div className="w-full flex items-center justify-center font-bold">
+                                                  {values.lastName} {values.firstName}
+                                             </div>
+                                             <div className="text-base font-bold mb-1">Giới thiệu</div>
+                                             <div className="flex justify-center mb-1">
+                                                  <pre className="font-sans text-sm">{values.bio}</pre>
+                                             </div>
+                                             <div className="flex items-start mb-1">
+                                                  <FaBirthdayCake className="mr-2 mt-1 text-green-600 "/>
+                                                  <div>
+                                                       <div>{moment(values.dateOfBirth).format("DD/MM/YYYY")}</div>
+                                                       <div className="text-sm text-gray-700">Ngày sinh</div>
+                                                  </div>
+                                             </div>
+                                             <div className="flex items-start mb-1">
+                                                  {values.gender === "Nam" ?  <SlUser className="mr-2 mt-1 text-green-600"/> :  <SlUserFemale className="mr-2 mt-1 text-green-600 "/>}
+                                                  <div>
+                                                       <div>{values.gender}</div>
+                                                       <div className="text-sm text-gray-700">Giới tính</div>
+                                                  </div>
+                                             </div>
+                                        </>
+                                        ):(
+                                             <>
+                                                  <div className="text-base font-bold mb-1">Chỉnh sửa phần giới thiệu</div>
+                                                  <div>
+                                                       {errors.lastName && (
+                                                            <div className="flex items-center text-red-500 text-sm mb-1">
+                                                                 <IoAlertCircleSharp className="text-lg" />
+                                                                 {errors.lastName}
+                                                            </div>
+                                                       )}
+                                                       <TextField type="text" placeholder="Họ" sx="w-80 md:w-full mb-2" name="lastName" error={errors.lastName ? "border-red-500" : ""} value={values.lastName} onChange={handleChange} disabled={edit ? true : false} />
+                                                  </div>
+                                                  <div>
+                                                       {errors.firstName && (
+                                                            <div className="flex items-center text-red-500 text-sm mb-1">
+                                                                 <IoAlertCircleSharp className="text-lg" />
+                                                                 {errors.firstName}
+                                                            </div>
+                                                       )}
+                                                       <TextField type="text" placeholder="Tên" sx="w-80 md:w-full mb-2" name="firstName" error={errors.firstName ? "border-red-500" : ""} value={values.firstName} onChange={handleChange} disabled={edit ? true : false} />
+                                                  </div>
+                                                  <TextFieldArea type="text" placeholder="Tiểu sử bản thân" sx="w-52 md:w-full mb-2" name="bio" value={values.bio} onChange={handleChange} disabled={edit ? true : false} />
+                                                  <div>
+                                                       {errors.dateOfBirth && (
+                                                            <div className="flex items-center text-red-500 text-sm mb-1">
+                                                                 <IoAlertCircleSharp className="text-lg" />
+                                                                 {errors.dateOfBirth}
+                                                            </div>
+                                                       )}
+                                                       <DateInput placeholder="Ngày sinh" sx="w-80 md:w-full mb-1" error={errors.dateOfBirth ? "border-red-500" : ""} selected={values.dateOfBirth} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateOfBirth(date, "dateOfBirth")} disabled={edit ? true : false} />
+                                                  </div>
+                                                  <RadioButton onChange={handleChange} name="gender" checked={values.gender} disabled={edit ? true : false} />
+                                             </>
+                                        )
+                                   }
+                              </div>
+                              <div className="flex justify-end">
+                                   {!edit && (
+                                        <Button sx="bg-green-500 hover:bg-green-600" onClick={handleSubmit}>
+                                             Cập nhật
+                                        </Button>
+                                   )}
+                              </div>
+                         </>
+                    </Scrollbar>
                </div>
           </div>
      );

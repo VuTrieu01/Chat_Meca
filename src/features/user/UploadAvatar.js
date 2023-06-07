@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 import { IoCloseSharp } from "react-icons/io5";
 import Button from "../../components/Button";
-const UploadAvatar = ({ openUploadAvatar, closeUploadAvatar, values, setValues, width }) => {
+const UploadAvatar = ({ openUploadAvatar, closeUploadAvatar, coverPhoto, values, setValues, width, height }) => {
      const [src, setSrc] = useState(null);
      const file = useRef(null);
      const [scaleValue, setScaleValue] = useState(1);
@@ -22,7 +22,11 @@ const UploadAvatar = ({ openUploadAvatar, closeUploadAvatar, values, setValues, 
      };
      const handleSubmit = () => {
           const url = preview.getImageScaledToCanvas().toDataURL();
-          setValues({ ...values, avatar: url });
+          if(coverPhoto){
+               setValues({ ...values, coverPhoto: url });
+          }else{
+               setValues({ ...values, avatar: url });
+          }
           setSrc(null);
           file.current.value = "";
           setScaleValue(1);
@@ -38,12 +42,12 @@ const UploadAvatar = ({ openUploadAvatar, closeUploadAvatar, values, setValues, 
                          </div>
                     </div>
                     <div className="flex flex-col items-center">
-                         <AvatarEditor image={src} width={width ? width : 208} height={208} border={40} borderRadius={width ? 0 : 300} scale={scaleValue} ref={setPreview} />
+                         <AvatarEditor image={src} width={width ? width : 208} height={height ? height : 208} border={20} borderRadius={width ? 0 : 300} scale={scaleValue} ref={setPreview} />
                          {src && <input className="w-3/5" type="range" value={scaleValue} min="1" max="10" onChange={onScaleChange} />}
                     </div>
                     <div className="flex justify-end mt-2">
                          <div className="flex items-center">
-                              <label for="file-upload" className="bg-gray-400 text-white hover:bg-gray-500 rounded-lg py-3 px-6 font-sans text-xs font-bold cursor-pointer">
+                              <label htmlFor="file-upload" className="bg-gray-400 text-white hover:bg-gray-500 rounded-lg py-3 px-6 font-sans text-xs font-bold cursor-pointer">
                                    Chọn tệp
                               </label>
                               <input id="file-upload" className="hidden" type="file" accept="image/png, image/jpeg" ref={file} onChange={profileImageChange} />

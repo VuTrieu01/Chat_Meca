@@ -6,9 +6,9 @@ export default function Avatar(props) {
     <div className={`${props.sx}`} title={props.title} onClick={props.onClick}>
       {props.url ? (
         <img
-          className={`inline-block ${
+          className={`inline-block rounded-full ${
             props.size ? `${props.size}` : " w-12"
-          } rounded-full ring-2 ring-white`}
+          } ring-2 ring-white`}
           src={props.url}
           alt=""
         />
