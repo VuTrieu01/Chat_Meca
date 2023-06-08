@@ -8,6 +8,9 @@ export default function SearchInput(props) {
         <AiOutlineSearch />
       </div>
       <input
+        onChange={props.onChange} 
+        value={props.value} 
+        name={props.name}
         type="search"
         className="block w-full p-3 pl-10 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0"
         placeholder={`${props.placeholder ? props.placeholder : "Tìm kiếm"}`}

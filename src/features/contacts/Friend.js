@@ -31,7 +31,6 @@ export default function Friend(props) {
               ) : (
                 <Avatar sx="mr-2" />
               )}
-
               <div>
                 <p className="font-bold">
                   {item.lastName} {item.firstName}
