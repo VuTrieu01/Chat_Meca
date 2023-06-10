@@ -16,7 +16,7 @@ import TextFieldArea from "../../components/TextFieldArea";
 import UploadAvatar from "./UploadAvatar";
 import Scrollbar from "../../components/Scrollbar";
 
-const UserForm = ({ openUser, closeUserForm, data }) => {
+const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
      const dbRef = ref(database);
      const [values, setValues] = useState({
           avatar: data.avatar ? data.avatar : "",
@@ -75,7 +75,7 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
                <div className={`fixed ${openUser} z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60`}></div>
                <div className={`fixed ${openUser} z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/5 bg-white rounded-md px-8 py-6 drop-shadow-lg`}>
                     <div className="flex justify-end">
-                         {edit && (
+                         {edit && editUser && (
                               <div title="Chỉnh sửa" className="cursor-pointer hover:bg-gray-200 p-2 rounded-full" onClick={handleEdit}>
                                    <AiOutlineEdit />
                               </div>
@@ -90,7 +90,7 @@ const UserForm = ({ openUser, closeUserForm, data }) => {
                               <div className="py-2 border-t border-b border-gray-300 mb-2">
                                    <div className="relative flex items-center flex-col mb-8">
                                         <div className={`w-full flex items-center justify-center bg-gray-500 ${!edit && "cursor-pointer hover:text-white"}`} onClick={() => handleUpload(0)}>
-                                             <img className="w-full h-[192px]" src={values.coverPhoto} alt="" />
+                                             {values.coverPhoto ? <img className="w-full h-[192px]" src={values.coverPhoto} alt="" /> : <div className="w-full h-[192px]"></div>}
                                         </div>
                                         {idd === 0 && <UploadAvatar openUploadAvatar={openUploadAvatar} closeUploadAvatar={closeUploadAvatar} coverPhoto values={values} setValues={setValues} width={550} height={212} />}
                                         <Avatar url={values.avatar} sx={`absolute bottom-[-2rem] ${!edit && "cursor-pointer"}`} size="h-24 w-24 border border-2 border-white" onClick={() => handleUpload(1)} />

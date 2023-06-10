@@ -11,6 +11,7 @@ import { child, onValue, ref, set } from "firebase/database";
 import { database } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
 import moment from "moment";
+import LoadingPage from "../../components/LoadingPage";
 
 export default function Register() {
      const [isVisible, setVisible] = useState(false);
@@ -21,11 +22,12 @@ export default function Register() {
           email: "",
           password: "",
           passwordConfirm: "",
-          dateOfBirth: "",
+          dateOfBirth: new Date(),
           gender: "Nữ",
      });
      const [errors, setErrors] = useState({});
      const [error, setError] = useState("");
+     const [loading, setLoading] = useState("hidden");
      const dbRef = ref(database);
      const { signup } = useAuth();
      const [listEmail, setListEmail] = useState([]);
@@ -55,14 +57,16 @@ export default function Register() {
      }, []);
      const handleSubmit = async (e) => {
           e.preventDefault();
-          setErrors(Validation(values));
-          if (errors.lastName === undefined && errors.firstName === undefined && errors.email === undefined && errors.password === undefined && errors.passwordConfirm === undefined && errors.dateOfBirth === undefined) {
+          const validationErrors = Validation(values);
+          setErrors(validationErrors);
+          if (validationErrors.lastName === undefined && validationErrors.firstName === undefined && validationErrors.email === undefined && validationErrors.password === undefined && validationErrors.passwordConfirm === undefined && validationErrors.dateOfBirth === undefined) {
                if (values.lastName !== "" && values.firstName !== "" && values.email !== "" && values.password !== "" && values.passwordConfirm !== "" && values.dateOfBirth !== "") {
                     if (listEmail.map((item) => item.email).find((a) => a === values.email) !== undefined) {
                          setError("Email đã tồn tại!!!");
                     } else {
                          try {
                               setError("");
+                              setLoading();
                               const res = await signup(values.email, values.password);
                               set(ref(database, `Account` + `/${res.user.uid}`), {
                                    uid: res.user.uid,
@@ -73,11 +77,14 @@ export default function Register() {
                                    gender: values.gender,
                               })
                                    .then(() => {
+                                        setLoading("hidden")
                                         console.log("Success");
                                    })
                                    .catch((error) => {
+                                        setLoading("hidden")
                                         console.log(error);
                                    });
+                              setLoading("hidden")
                               navigate("/");
                          } catch (e) {
                               setError("Tạo tài khoản thất bại!!!");
@@ -167,6 +174,7 @@ export default function Register() {
                               </form>
                          </div>
                     </div>
+                    <LoadingPage openLoading={loading}/>
                </div>
           </div>
      );

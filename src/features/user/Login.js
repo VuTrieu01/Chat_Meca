@@ -6,6 +6,7 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { IoAlertCircleSharp } from "react-icons/io5";
 import { useAuth } from "../../context/AuthContext";
 import Validation from "./Validation";
+import LoadingPage from "../../components/LoadingPage";
 
 export default function Login() {
   const [isVisible, setVisible] = useState(false);
@@ -15,6 +16,7 @@ export default function Login() {
   });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState("hidden");
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const handleToggle = () => {
@@ -25,15 +27,19 @@ export default function Login() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors(Validation(values));
-    if (errors.email === undefined && errors.password === undefined) {
+    const validationErrors = Validation(values);
+    setErrors(validationErrors);
+    if (validationErrors.email === undefined && validationErrors.password === undefined) {
       if (values.email !== "" && values.password !== "") {
         try {
           setError("");
+          setLoading();
           await signIn(values.email, values.password);
+          setLoading("hidden")
           navigate("/");
         } catch (event) {
           setError("Email hoặc mật khẩu không chính xác!!!");
+          setLoading("hidden")
           console.log(event);
         }
       }
@@ -115,6 +121,7 @@ export default function Login() {
             </form>
           </div>
         </div>
+        <LoadingPage openLoading={loading}/>
       </div>
     </div>
   );

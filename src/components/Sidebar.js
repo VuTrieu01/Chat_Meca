@@ -82,33 +82,33 @@ export default function Sidebar() {
      };
      return (
           <div className="h-screen">
-               <div className="h-full w-full flex flex-col items-center pt-4 bg-green-600">
-                    {dbAccount
-                         .filter((val) => val.uid === currentUser.uid)
-                         .map((item, index) => (
-                              <div key={index}>
-                                   <Avatar url={item.avatar} title={item.email} sx="mx-2 my-10 cursor-pointer" size="h-12 w-12" onClick={openUserForm} />
-                                   <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} />
+               {dbAccount
+                    .filter((val) => val.uid === currentUser.uid)
+                    .map((item, index) => (
+                         <div className="h-full w-full flex flex-col items-center pt-4 bg-green-600" key={index}>
+                              <div>
+                                   <Avatar url={item.avatar} size="h-12 w-12" title={item.email} sx="mx-2 my-10 cursor-pointer" onClick={openUserForm} />
+                                   <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser/>
                               </div>
-                         ))}
-                    <div className="h-full flex flex-col justify-between">
-                         <div className="flex flex-col">
-                              {sidebarLinks.slice(0, 3).map((item) => (
-                                   <div key={item.id} className={`w-full p-5 text-3xl text-white cursor-pointer ${activeSidebar === item.id ? "bg-green-800 " : "hover:bg-green-700"}`} onClick={() => handleChange(item.id)}>
-                                        {activeSidebar === item.id ? item.iconFill : item.icon}
+                              <div className="h-full flex flex-col justify-between">
+                                   <div className="flex flex-col">
+                                        {sidebarLinks.slice(0, 3).map((item) => (
+                                             <div key={item.id} className={`w-full p-5 text-3xl text-white cursor-pointer ${activeSidebar === item.id ? "bg-green-800 " : "hover:bg-green-700"}`} onClick={() => handleChange(item.id)}>
+                                                  {activeSidebar === item.id ? item.iconFill : item.icon}
+                                             </div>
+                                        ))}
                                    </div>
-                              ))}
-                         </div>
-                         <div className="relative flex flex-col">
-                              {sidebarLinks.slice(3, 5).map((item) => (
-                                   <div key={item.id} className={`w-full p-5 text-3xl text-white cursor-pointer ${activeSidebar === item.id ? "bg-green-800 " : "hover:bg-green-700"}`} onClick={() => handleChange(item.id)}>
-                                        {activeSidebar === item.id || setting === item.id ? item.iconFill : item.icon}
+                                   <div className="relative flex flex-col">
+                                        {sidebarLinks.slice(3, 5).map((item) => (
+                                             <div key={item.id} className={`w-full p-5 text-3xl text-white cursor-pointer ${activeSidebar === item.id ? "bg-green-800 " : "hover:bg-green-700"}`} onClick={() => handleChange(item.id)}>
+                                                  {activeSidebar === item.id || setting === item.id ? item.iconFill : item.icon}
+                                             </div>
+                                        ))}
+                                        {open && <Settings setOpen={setOpen} openUserForm={openUserForm}/>}
                                    </div>
-                              ))}
-                              {open && <Settings setOpen={setOpen} />}
+                              </div>
                          </div>
-                    </div>
-               </div>
+                    ))}
           </div>
      );
 }

@@ -8,10 +8,20 @@ import { uid } from "uid";
 import { ref, set } from "firebase/database";
 import { database } from "../../firebase";
 import { AiOutlineSearch } from "react-icons/ai";
+import UserForm from "../user/UserForm";
 
 export default function AddFriend({ currentUser, accounts, friends }) {
      const uuid = uid();
      const [search, setSearch] = useState("");
+     const [openUser, setOpenUser] = useState("hidden");
+     const [id, setId] = useState(-1);
+     const openUserForm = (id) => {
+          setId(id);
+          setOpenUser("");
+     };
+     const closeUserForm = () => {
+          setOpenUser("hidden");
+     };
      const friendsArray = Object.values(friends)
           .flatMap((obj) => Object.values(obj))
           .filter((val) => val.accountId === currentUser.uid);
@@ -38,7 +48,6 @@ export default function AddFriend({ currentUser, accounts, friends }) {
                console.log(e);
           }
      };
-     console.log(searchData);
      return (
           <div className="h-full w-full">
                <div className="h-full w-full bg-gray-100">
@@ -67,7 +76,8 @@ export default function AddFriend({ currentUser, accounts, friends }) {
                                    {searchData.map((item, index) => (
                                         <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
                                              <div className="flex">
-                                                  <Avatar sx="cursor-pointer" />
+                                                  <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(index)}/>
+                                                  {id === index && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser/>}
                                                   <div className="ml-2">
                                                        <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                                             {item.lastName} {item.firstName}

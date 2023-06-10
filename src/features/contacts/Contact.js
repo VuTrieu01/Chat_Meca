@@ -12,9 +12,9 @@ import ChatView from "../chat/ChatView";
 export default function Contact() {
   const activeContact = useStore((state) => state.activeContact);
   const openChat = useStore((state) => state.openChat);
-  const [accounts, setAccounts] = useState([]);
   const { currentUser } = useAuth();
   const dbRef = ref(database);
+  const [accounts, setAccounts] = useState([]);
   const [friends, setFriends] = useState([]);
   useEffect(() => {
     onValue(child(dbRef, `Account`), (snapshot) => {
