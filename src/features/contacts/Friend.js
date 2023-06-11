@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "../../components/Avatar";
 import Ping from "../../components/Ping";
 import useStore from "../../zustand/store";
@@ -13,7 +13,7 @@ export default function Friend({ accounts, friends, currentUser, userArray }) {
      const [openUser, setOpenUser] = useState("hidden");
      const [id, setId] = useState(-1);
      const [openMessenger, setOpenMessenger] = useState("hidden");
-     const addProvisionalDataAccount = useStore((state) => state.addProvisionalDataAccount);
+     const addUserFriend = useStore((state) => state.addUserFriend);
      const userFriend = accounts.filter((val) => friends.status === true && friends.accountId.includes(val.uid));
      const openUserForm = (id) => {
           setId(id);
@@ -22,15 +22,15 @@ export default function Friend({ accounts, friends, currentUser, userArray }) {
      const closeUserForm = () => {
           setOpenUser("hidden");
      };
-     const handleClick = () => {
-          addProvisionalDataAccount(accounts);
+     const handleClick = (item) => {
+          addUserFriend(item);
           setOpenChat(true);
      };
      return (
           <>
                {userFriend.map((item, index) => (
                     <div key={index} className="flex justify-between items-center w-full bg-white px-5 py-4 hover:bg-gray-100">
-                         <div onClick={handleClick} className="flex items-center w-full cursor-pointer">
+                         <div onClick={() => handleClick(item)} className="flex items-center w-full cursor-pointer">
                               <div className="flex items-end">
                                    <Avatar url={item.avatar} size="h-12 w-12" sx={`${!item.active && "mr-2"}`} />
                                    {item.active && <Ping sx="right-3" />}

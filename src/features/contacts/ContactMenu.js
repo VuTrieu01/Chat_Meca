@@ -6,8 +6,8 @@ import useStore from "../../zustand/store";
 export default function ContactMenu() {
   const activeContact = useStore((state) => state.activeContact);
   const setOpenChat = useStore((state) => state.setOpenChat);
-  const addProvisionalDataAccount = useStore(
-    (state) => state.addProvisionalDataAccount
+  const addUserFriend = useStore(
+    (state) => state.addUserFriend
   );
   const setActiveContact = useStore((state) => state.setActiveContact);
   const handleClick = (id) => {
@@ -15,7 +15,7 @@ export default function ContactMenu() {
       setOpenChat(false);
     }
     setActiveContact(id);
-    addProvisionalDataAccount([]);
+    addUserFriend([]);
   };
   return (
     <div className="h-full border-gray-100 border-r-2">

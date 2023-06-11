@@ -7,7 +7,6 @@ import { useState } from "react";
 
 export default function FriendsList({ currentUser, accounts, friends }) {
      const [search, setSearch] = useState("");
-     
      const friendsArray = Object.values(friends)
           .flatMap((obj) => Object.values(obj))
           .filter((val) => val.accountFriendId === currentUser.uid);
@@ -18,7 +17,6 @@ export default function FriendsList({ currentUser, accounts, friends }) {
      const handleChange = (e) => {
           if (e.target) setSearch(e.target.value);
      };
-     console.log(friendsArray.filter(val => val.accountId.includes(accounts.filter((val) => (val.lastName + " " + val.firstName).toLowerCase().includes(search.toLowerCase())).map(item => item.uid))));
      return (
           <div className="h-full w-full">
                <div className="h-[75%] md:h-full md:w-full bg-white">

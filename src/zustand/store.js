@@ -4,16 +4,16 @@ const useStore = create((set) => ({
   activeSidebar: 0,
   activeContact: 0,
   openChat: false,
-  provisionalDataAccount: [],
+  dataUserFriend: {},
   openChatItem: 0,
   setActiveSidebar: (activeSidebar) =>
     set(() => ({ activeSidebar: activeSidebar })),
   setActiveContact: (activeContact) =>
     set(() => ({ activeContact: activeContact })),
   setOpenChat: (openChat) => set(() => ({ openChat: openChat })),
-  addProvisionalDataAccount: (newItem) =>
+  addUserFriend: (newItem) =>
     set(() => ({
-      provisionalDataAccount: [...newItem],
+      dataUserFriend: newItem,
     })),
   setOpenChatItem: (openChatItem) =>
     set(() => ({ openChatItem: openChatItem })),
