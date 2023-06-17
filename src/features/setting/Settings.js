@@ -40,7 +40,7 @@ export default function Settings({ setOpen, openUserForm, sx, friends, setOpenMe
           return () => {
                document.removeEventListener("click", handleClickOutside, true);
           };
-     }, [menuRef]);
+     }, [menuRef, setOpen]);
      const handleDelete = () => {
           setOpenMessenger("");
      };

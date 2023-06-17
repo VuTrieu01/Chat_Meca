@@ -27,12 +27,14 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
      const friendsArray = Object.values(friends)
           .flatMap((obj) => Object.values(obj))
           .filter((val) => val.accountId === currentUser.uid || val.accountFriendId === currentUser.uid);
-     const user = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) && !friendsArray.map((item) => item.accountId).includes(val.uid));
+     const user = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) 
+                    && !friendsArray.map((item) => item.accountId).includes(val.uid));
+     const friendSuggestions = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) 
+                              && !friendsArray.map((item) => item.accountId).includes(val.uid) && getCommonFriendsCount(val.uid) > 0);
      const searchData = search !== "" && user.filter((val) => (val.lastName + " " + val.firstName).toLowerCase().includes(search.toLowerCase()));
      const handleChange = (e) => {
           if (e.target) setSearch(e.target.value);
      };
-     const countSendFriends = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) && !friendsArray.map((item) => item.accountId).includes(val.uid) && getCommonFriendsCount(val.uid) > 0);
      const handleAddFriend = (item) => {
           try {
                set(ref(database, `Friends/${currentUser.uid}/${uuid}`), {
@@ -71,10 +73,10 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                         <div>Tìm kiếm bạn bè</div>
                                    </div>
                                    <div className="flex items-center w-full pb-4 border-gray-100 border-b-2">
-                                        <div className="font-bold mr-1">Gợi ý kết bạn({countSendFriends.length})</div>
-                                        {countSendFriends.length > 0 && (
+                                        <div className="font-bold mr-1">Gợi ý kết bạn({friendSuggestions.length})</div>
+                                        {friendSuggestions.length > 0 && (
                                              <>
-                                                  {countSendFriends.length > 8 || openSendFriends === "hidden" ? (
+                                                  {friendSuggestions.length > 8 || openSendFriends === "hidden" ? (
                                                        <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
                                                             <IoMdArrowDropdown onClick={() => setSendFriends("")} />
                                                        </div>
@@ -86,8 +88,8 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                              </>
                                         )}
                                    </div>
-                                   <div className={`${countSendFriends.length > 8 || openSendFriends === "hidden" ? openSendFriends : ""} grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
-                                        {countSendFriends.map((item, index) => {
+                                   <div className={`${friendSuggestions.length > 8 || openSendFriends === "hidden" ? openSendFriends : ""} grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
+                                        {friendSuggestions.map((item, index) => {
                                              const count = getCommonFriendsCount(item.uid);
                                              return (
                                                   <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
@@ -118,25 +120,28 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                               </div>
                          ) : (
                               <div className="grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 py-4">
-                                   {searchData.map((item, index) => (
-                                        <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
-                                             <div className="flex">
-                                                  <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(index)} />
-                                                  {id === index && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />}
-                                                  <div className="ml-2">
-                                                       <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
-                                                            {item.lastName} {item.firstName}
-                                                       </p>
-                                                       <p className="mb-1">2 bạn chung</p>
+                                   {searchData.map((item, index) => {
+                                        const count = getCommonFriendsCount(item.uid);
+                                        return (
+                                             <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
+                                                  <div className="flex">
+                                                       <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(index)} />
+                                                       {id === index && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />}
+                                                       <div className="flex flex-col justify-center ml-2">
+                                                            <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                                                 {item.lastName} {item.firstName}
+                                                            </p>
+                                                            {count > 0 && <p className="mb-1">{count} bạn chung</p>}
+                                                       </div>
+                                                  </div>
+                                                  <div className="flex justify-end w-full">
+                                                       <Button sx="mr-2 bg-green-500 hover:bg-green-600" onClick={() => handleAddFriend(item)}>
+                                                            Kết bạn
+                                                       </Button>
                                                   </div>
                                              </div>
-                                             <div className="flex justify-end w-full">
-                                                  <Button sx="mr-2 bg-green-500 hover:bg-green-600" onClick={() => handleAddFriend(item)}>
-                                                       Kết bạn
-                                                  </Button>
-                                             </div>
-                                        </div>
-                                   ))}
+                                        );
+                                   })}
                               </div>
                          )}
                     </Scrollbar>

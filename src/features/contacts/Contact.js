@@ -36,7 +36,7 @@ export default function Contact() {
                }
           });
      }, [dbRef]);
-     const mutualFriends = Object.values(friends).flatMap((obj) => Object.values(obj));
+     const mutualFriends = Object.values(friends).flatMap((obj) => Object.values(obj)).filter((val) => val.status === true);
      // Tạo bảng băm để lưu trữ danh sách bạn của mỗi người dùng
      const userMap = [];
      let idUser = [];
@@ -52,7 +52,6 @@ export default function Contact() {
      const getCommonFriendsCount = (userId1) => {
           const friends1 = userMap[userId1];
           const friends2 = userMap[currentUser.uid];
-
           let count = 0;
           if (friends1 !== undefined) {
                friends1.forEach((friendId) => {
@@ -67,7 +66,10 @@ export default function Contact() {
           <div className="h-screen w-full">
                <div className="h-full w-full flex">
                     <ContactMenu />
-                    {activeContact === 0 ? openChat ? <ChatView /> : <FriendsList currentUser={currentUser} accounts={accounts} friends={friends} /> : activeContact === 1 ? <FriendRequests currentUser={currentUser} accounts={accounts} friends={friends} /> : <AddFriend currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} />}
+                    {activeContact === 0 ? openChat ? <ChatView /> 
+                    : <FriendsList currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} /> 
+                    : activeContact === 1 ? <FriendRequests currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} /> 
+                    : <AddFriend currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} />}
                </div>
           </div>
      );

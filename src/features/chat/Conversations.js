@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
 import Ping from "../../components/Ping";
 import { IoCall, IoSend } from "react-icons/io5";
@@ -17,11 +17,16 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
      const uuid = uid();
      const messageEl = useRef(null);
      const [values, setValues] = useState("");
+     const [placeHolder, setPlaceHolder] = useState(true);
      const setActiveSidebar = useStore((state) => state.setActiveSidebar);
      const setOpenChatItem = useStore((state) => state.setOpenChatItem);
      const lastLoggedInTime = new Date();
      const handleChange = (e) => {
-          setValues(e.target.value);
+          setValues(e.target.textContent);
+     };
+     const handlePlaceHolder = () => {
+          setPlaceHolder(false);
+          setValues("");
      };
      const handleChat = (item) => {
           chatArray.map((upItem) => {
@@ -40,6 +45,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                chat: values,
                lastLoggedInTime: lastLoggedInTime.getTime(),
           });
+          setPlaceHolder(true);
           setValues("");
           setActiveSidebar(0);
           setOpenChatItem(item.uid);
@@ -47,7 +53,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
      return (
           <div className="h-screen w-full">
                {userFriend.map((item, index) => (
-                    <div className="h-full w-full bg-gray-100" key={index}>
+                    <div className="relative h-full w-full bg-gray-100" key={index}>
                          <div className="h-[10%] flex items-center justify-between bg-white p-3 border-gray-100 border-b-2">
                               <div className="flex items-center">
                                    <div className="flex items-end">
@@ -76,16 +82,17 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                                    <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
                               </div>
                          </div>
-                         <Scrollbar messageEl={messageEl}>
+                         <Scrollbar messageEl={messageEl} sx="h-auto">
                               <ChatContent userFriend={item} chatArray={chatArray} currentUser={currentUser} />
                          </Scrollbar>
-                         <div className="h-[10%] flex items-center bg-white px-10">
-                              <div className="relative w-full">
-                                   <textarea className="block w-full h-12 p-3 pr-16 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0 resize-none" placeholder="Aa" value={values} onChange={handleChange} />
-                                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-green-700">
-                                        <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
-                                        {values.length > 0 && <IoSend className="text-xl cursor-pointer hover:text-green-500" onClick={() => handleChat(item)} />}
-                                   </div>
+                         <div className="absolute bottom-0 h-auto w-full flex items-center justify-center bg-white px-5 py-4 overflow-auto">
+                              <BiImageAdd className="text-2xl mr-2 cursor-pointer text-green-700 hover:text-green-500" />
+                              <div contentEditable suppressContentEditableWarning={true} onFocus={handlePlaceHolder} onBlur={() => setPlaceHolder(true)} className={`w-full max-h-40 overflow-auto p-3 text-sm ${placeHolder && "text-gray-400"} rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0`} onInput={handleChange}>
+                                   {values === "" && placeHolder && "Aa"}
+                              </div>
+                              <div className="flex items-center pl-3 text-green-700">
+                                   <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+                                   {values.length > 0 && <IoSend className="text-xl cursor-pointer hover:text-green-500" onClick={() => handleChat(item)} />}
                               </div>
                          </div>
                     </div>

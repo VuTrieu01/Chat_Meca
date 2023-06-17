@@ -4,7 +4,7 @@ import { FiMail, FiUserX } from "react-icons/fi";
 import Scrollbar from "../../components/Scrollbar";
 import Request from "./Request";
 
-export default function FriendRequests({ currentUser, accounts, friends }) {
+export default function FriendRequests({ currentUser, accounts, friends, getCommonFriendsCount }) {
      const [openFriendRequests, setFriendRequests] = useState("");
      const [openSendFriends, setSendFriends] = useState("");
      const friendsArray = Object.values(friends)
@@ -41,7 +41,7 @@ export default function FriendRequests({ currentUser, accounts, friends }) {
                                    </div>
                                    <div className={`${countFriends > 8 || openFriendRequests === "hidden" ? openFriendRequests : ""} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
                                         {friendsArray.map((item, index) => (
-                                             <Request key={index} accounts={accounts} friends={item} />
+                                             <Request key={index} accounts={accounts} friends={item} getCommonFriendsCount={getCommonFriendsCount}/>
                                         ))}
                                    </div>
                               </>
@@ -69,7 +69,7 @@ export default function FriendRequests({ currentUser, accounts, friends }) {
                          </div>
                          <div className={`${countSendFriends > 8 || openSendFriends === "hidden" ? openSendFriends : ""} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
                               {sendFriendsArray.map((item, index) => (
-                                   <Request key={index} accounts={accounts} sendFriends={item} />
+                                   <Request key={index} accounts={accounts} sendFriends={item} getCommonFriendsCount={getCommonFriendsCount} />
                               ))}
                          </div>
                     </Scrollbar>

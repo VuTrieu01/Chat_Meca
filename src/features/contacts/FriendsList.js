@@ -5,7 +5,7 @@ import Scrollbar from "../../components/Scrollbar";
 import Friend from "./Friend";
 import { useState } from "react";
 
-export default function FriendsList({ currentUser, accounts, friends }) {
+export default function FriendsList({ currentUser, accounts, friends, getCommonFriendsCount }) {
      const [search, setSearch] = useState("");
      const friendsArray = Object.values(friends)
           .flatMap((obj) => Object.values(obj))
@@ -13,7 +13,7 @@ export default function FriendsList({ currentUser, accounts, friends }) {
      const userArray = Object.values(friends)
           .flatMap((obj) => Object.values(obj))
           .filter((val) => val.accountId === currentUser.uid || val.accountFriendId === currentUser.uid);
-          const searchData = search !== "" && friendsArray.filter(val => val.accountId.includes(accounts.filter((val) => (val.lastName + " " + val.firstName).toLowerCase().includes(search.toLowerCase())).map(item => item.uid)));
+     const searchData = search !== "" && friendsArray.filter((val) => val.accountId.includes(accounts.filter((val) => (val.lastName + " " + val.firstName).toLowerCase().includes(search.toLowerCase())).map((item) => item.uid)));
      const handleChange = (e) => {
           if (e.target) setSearch(e.target.value);
      };
@@ -30,11 +30,8 @@ export default function FriendsList({ currentUser, accounts, friends }) {
                          <div className="font-bold">Bạn bè ({friendsArray.filter((item) => item.status === true).length})</div>
                          <SearchInput sx="w-2/5" value={search} onChange={handleChange} />
                     </div>
-                    <Scrollbar>
-                      {searchData ? 
-                        searchData.map((item, index) => <Friend key={index} accounts={accounts} friends={item} currentUser={currentUser} userArray={userArray} />) 
-                        : friendsArray.map((item, index) => <Friend key={index} accounts={accounts} friends={item} currentUser={currentUser} userArray={userArray} />)}
-                      </Scrollbar>
+                    <Scrollbar>{searchData ? searchData.map((item, index) => <Friend key={index} accounts={accounts} friends={item} currentUser={currentUser} userArray={userArray} getCommonFriendsCount={getCommonFriendsCount} />) 
+                    : friendsArray.map((item, index) => <Friend key={index} accounts={accounts} friends={item} currentUser={currentUser} userArray={userArray} getCommonFriendsCount={getCommonFriendsCount} />)}</Scrollbar>
                </div>
           </div>
      );
