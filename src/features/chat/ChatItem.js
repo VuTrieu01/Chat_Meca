@@ -28,7 +28,7 @@ export default function ChatItem({ openChatItem, chatArray, accounts, currentUse
           <div className={`w-full px-5 py-4 cursor-pointer ${openChatItem === accounts.uid ? "bg-green-100" : "bg-white hover:bg-gray-100"}`} onClick={() => handleClick(accounts)}>
                <div className="flex items-center">
                     <div className="flex items-end">
-                         <Avatar url={accounts.avatar} />
+                         <Avatar url={accounts.avatar} sx={`${!accounts.active && "mr-2"}`}/>
                          {accounts.active && <Ping sx="right-3" />}
                     </div>
                     <div className="w-full flex items-center justify-between">

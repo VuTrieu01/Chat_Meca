@@ -34,7 +34,7 @@ export default function ChatList() {
                }
           });
      }, [dbRef]);
-     const chatArray = Object.values(messenger !== undefined && messenger)
+     const chatArray = Object.values(messenger)
           .flatMap((obj) => Object.values(obj))
           .flatMap((obj) => Object.values(obj));
      const userFriend = accounts
@@ -46,7 +46,7 @@ export default function ChatList() {
                          .includes(val.uid) ||
                     chatArray
                          .filter((val) => val.accountFriendId === currentUser.uid)
-                         .map((item) => item.accountId)[0]
+                         .map((item) => item.accountId)
                          .includes(val.uid)
           )
           .map((friend) => {
@@ -56,6 +56,7 @@ export default function ChatList() {
                     time: chat ? chat.lastLoggedInTime : 0,
                };
           });
+
      return (
           <div className="h-full border-gray-100 border-r-2">
                <div className="h-full w-[22rem] py-5">
