@@ -18,7 +18,7 @@ export default function MessengerBox({ currentUser, currentUserFriend, data, ope
           }
      };
      return (
-          <div className={`fixed ${openMessenger} z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60`}>
+          <div className={`fixed ${openMessenger} z-40 w-screen h-screen inset-0 bg-gray-900 ${dataFriends ? "bg-opacity-60" : "bg-opacity-0"}`}>
                <div className={`fixed ${openMessenger} z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-md px-6 py-2 drop-shadow-lg border border-gray-400`}>
                     <div className="flex justify-end">
                          <div className="cursor-pointer p-2 hover:bg-gray-200 rounded-full" onClick={handleClose}>

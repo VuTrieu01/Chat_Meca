@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "../../components/Avatar";
 import Ping from "../../components/Ping";
 import useStore from "../../zustand/store";

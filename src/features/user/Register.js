@@ -50,11 +50,11 @@ export default function Register() {
                const data = snapshot.val();
                if (data !== null) {
                     Object.values(data).map((item) => {
-                         setListEmail((oldArray) => [...oldArray, item]);
+                        return setListEmail((oldArray) => [...oldArray, item]);
                     });
                }
           });
-     }, []);
+     }, [dbRef]);
      const handleSubmit = async (e) => {
           e.preventDefault();
           const validationErrors = Validation(values);
@@ -68,7 +68,7 @@ export default function Register() {
                               setError("");
                               setLoading();
                               const res = await signup(values.email, values.password);
-                              set(ref(database, `Account` + `/${res.user.uid}`), {
+                              set(ref(database, `Account/${res.user.uid}`), {
                                    uid: res.user.uid,
                                    lastName: values.lastName,
                                    firstName: values.firstName,

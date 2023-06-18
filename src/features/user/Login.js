@@ -108,7 +108,7 @@ export default function Login() {
               </div>
 
               <div className="mb-4 flex justify-center">
-                <a href="">Quên mật khẩu?</a>
+                <p>Quên mật khẩu?</p>
               </div>
               <p className="text-sm font-semibold text-center">
                 Không có tài khoản?

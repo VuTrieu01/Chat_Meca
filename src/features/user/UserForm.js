@@ -56,7 +56,7 @@ const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
           setErrors(Validation(values));
           if (errors.lastName === undefined && errors.firstName === undefined && errors.dateOfBirth === undefined) {
                if (values.lastName !== "" && values.firstName !== "" && values.dateOfBirth !== "") {
-                    update(child(dbRef, `Account` + `/${data.uid}`), {
+                    update(child(dbRef, `Account/${data.uid}`), {
                          avatar: values.avatar,
                          coverPhoto: values.coverPhoto,
                          firstName: values.firstName,

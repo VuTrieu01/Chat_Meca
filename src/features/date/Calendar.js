@@ -35,7 +35,7 @@ const Calendar = () => {
       if (data !== null) {
         Object.values(data).map((item) => {
           setDataEvent((oldArray) => [...oldArray, item]);
-          setLoading(false);
+          return setLoading(false);
         });
       }
     });
@@ -51,7 +51,7 @@ const Calendar = () => {
       };
     });
     setHolidays(holidayList);
-  }, [date]);
+  }, [date, dbRef]);
   const getHoliday = (date) => {
     const formattedDate = moment(date).format("YYYY-MM-DD");
     return holidays

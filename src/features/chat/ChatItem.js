@@ -40,7 +40,9 @@ export default function ChatItem({ openChatItem, chatArray, accounts, currentUse
                          </div>
                          <div className="flex flex-col items-end">
                               <div className="text-gray-400 text-sm">{ConvertNumberToTime(chatData.lastLoggedInTime)}</div>
-                              <div className={`${chatData.newText && chatData.accountId !== currentUser.uid ? "flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs" : ""} h-5 w-5 p-2`}>{chatData.newText && chatData.accountId !== currentUser.uid ? (countNewChat < 100 ? countNewChat : "99") : ""}</div>
+                              <div className={`${chatData.newText && chatData.accountId !== currentUser.uid ? "flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs" : ""} h-5 w-5 p-2`}>
+                                   {chatData.newText && chatData.accountId !== currentUser.uid ? (countNewChat < 6 ? countNewChat : "+5") : ""}
+                              </div>
                          </div>
                     </div>
                </div>

@@ -1,0 +1,13 @@
+.emoji-picker-react {
+    position: absolute;
+    bottom: 310px;
+}
+.emoji-search {
+    display: none;
+}
+.skin-tones-list {
+    display: none;
+}
+.emoji-picker-react .content-wrapper-epr::before {
+    content: none !important;
+}

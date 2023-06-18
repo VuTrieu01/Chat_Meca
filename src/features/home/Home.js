@@ -1,5 +1,4 @@
 import { child, ref, update } from "firebase/database";
-
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import useStore from "../../zustand/store";
@@ -37,13 +36,13 @@ export default function Home() {
 
   const handleBeforeUnload = () => {
     setIsOnline(false);
-    update(child(dbRef, `Account` + `/${currentUser.uid}`), {
+    update(child(dbRef, `Account/${currentUser.uid}`), {
       active: false,
       lastLoggedInTime: lastLoggedInTime.getTime(),
     });
   };
   useEffect(() => {
-    update(child(dbRef, `Account` + `/${currentUser.uid}`), {
+    update(child(dbRef, `Account/${currentUser.uid}`), {
       active: isOnline,
       lastLoggedInTime: lastLoggedInTime.getTime(),
     });

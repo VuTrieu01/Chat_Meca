@@ -5,30 +5,26 @@ import { database } from "../../firebase";
 import moment from "moment";
 
 export default function CalendarRight({ date, today, getHoliday, dataEvent }) {
-  const dbRef = ref(database);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      dataEvent.map((item) => {
-        if (currentTime > new Date(item.time)) {
-          if (!moment(currentTime).startOf("day").isSame(moment(item.time))) {
-            update(child(dbRef, `Event` + `/${item.uid}`), {
-              done: true,
-            });
-          }
-        }
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [dataEvent]);
-  return (
-    <div>
-      <WeekList
-        date={date}
-        today={today}
-        getHoliday={getHoliday}
-        dataEvent={dataEvent}
-      />
-    </div>
-  );
+     const dbRef = ref(database);
+     useEffect(() => {
+          const interval = setInterval(() => {
+               const currentTime = new Date();
+               dataEvent.map((item) => {
+                    if (currentTime > new Date(item.time)) {
+                         if (!moment(currentTime).startOf("day").isSame(moment(item.time))) {
+                              return update(child(dbRef, `Event/${item.uid}`), {
+                                   done: true,
+                              });
+                         }
+                    }
+                    return null;
+               });
+          }, 1000);
+          return () => clearInterval(interval);
+     }, [dataEvent, dbRef]);
+     return (
+          <div>
+               <WeekList date={date} today={today} getHoliday={getHoliday} dataEvent={dataEvent} />
+          </div>
+     );
 }

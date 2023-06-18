@@ -49,7 +49,7 @@ const EventForm = ({ title, editEvent, deleteItem, open, closeButton, dataEvent 
           closeButton();
      };
      const handleDone = () => {
-          update(child(dbRef, `Event` + `/${dataEvent.uid}`), {
+          update(child(dbRef, `Event/${dataEvent.uid}`), {
                done: true,
           });
           closeButton();
@@ -59,7 +59,7 @@ const EventForm = ({ title, editEvent, deleteItem, open, closeButton, dataEvent 
           if (values.title !== "") {
                if (editEvent) {
                     return (
-                         update(child(dbRef, `Event` + `/${dataEvent.uid}`), {
+                         update(child(dbRef, `Event/${dataEvent.uid}`), {
                               title: values.title,
                               contents: values.contents,
                               time: values.allDay === true ? moment(values.time).startOf("day").toDate().toString() : values.time.toString(),
@@ -77,7 +77,7 @@ const EventForm = ({ title, editEvent, deleteItem, open, closeButton, dataEvent 
                     );
                }
 
-               set(ref(database, `Event` + `/${uuid}`), {
+               set(ref(database, `Event/${uuid}`), {
                     uid: uuid,
                     accountId: currentUser.uid,
                     title: values.title,

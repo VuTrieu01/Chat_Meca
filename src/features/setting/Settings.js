@@ -6,10 +6,12 @@ import { database } from "../../firebase";
 import { useEffect } from "react";
 import { MdPersonRemove } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
+import useStore from "../../zustand/store";
 
 export default function Settings({ setOpen, openUserForm, sx, friends, setOpenMessenger }) {
      const dbRef = ref(database);
      const menuRef = useRef(null);
+     const addUserFriend = useStore((state) => state.addUserFriend);
      const { logOut, currentUser } = useAuth();
      const lastLoggedInTime = new Date();
      const handleOpenUserForm = () => {
@@ -25,6 +27,7 @@ export default function Settings({ setOpen, openUserForm, sx, friends, setOpenMe
                lastLoggedInTime: lastLoggedInTime.getTime(),
           });
           try {
+               addUserFriend({});
                await logOut();
           } catch (e) {
                console.log(e);
