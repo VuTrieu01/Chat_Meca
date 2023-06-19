@@ -38,3 +38,15 @@ input::-ms-clear {
     border-radius: 100vh;
   }
 }
+
+@layer utilities {
+  .scrollbarX::-webkit-scrollbar {
+    height: 0;
+  }
+  .scrollbarX::-webkit-scrollbar-track {
+    border-radius: 100vh;
+  }
+  .scrollbarX::-webkit-scrollbar-thumb {
+    border-radius: 100vh;
+  }
+}

@@ -14,12 +14,10 @@ export default function ChatList() {
      const { currentUser } = useAuth();
      const [messenger, setMessenger] = useState([]);
      const [accounts, setAccounts] = useState([]);
+     const [group, setGroup] = useState([]);
      const [openListChat, setOpenListChat] = useState(true);
      const [openGroupForm, closeGroupForm] = useState("hidden");
      const openChatItem = useStore((state) => state.openChatItem);
-     const [valueGroup, setValueGroup] = useState({
-          avatar: "",
-     });
      useEffect(() => {
           onValue(child(dbRef, `Account`), (snapshot) => {
                setAccounts([]);
@@ -36,6 +34,15 @@ export default function ChatList() {
                if (data !== null) {
                     Object.values(data).map((item) => {
                          return setMessenger((oldArray) => [...oldArray, item]);
+                    });
+               }
+          });
+          onValue(child(dbRef, `Group`), (snapshot) => {
+               setGroup([]);
+               const data = snapshot.val();
+               if (data !== null) {
+                    Object.values(data).map((item) => {
+                         return setGroup((oldArray) => [...oldArray, item]);
                     });
                }
           });
@@ -70,7 +77,7 @@ export default function ChatList() {
                          <p className="font-bold text-2xl">Chat</p>
                          <AiOutlineUsergroupAdd title="Tạo nhóm" className="text-xl ml-10 cursor-pointer" onClick={() => closeGroupForm("")} />
                     </div>
-                    <GroupForm openGroupForm={openGroupForm} closeGroupForm={closeGroupForm} values={valueGroup} setValues={setValueGroup} />
+                    <GroupForm openGroupForm={openGroupForm} closeGroupForm={closeGroupForm} accounts={accounts} chatArray={chatArray} currentUser={currentUser}/>
                     <SearchInput sx="mx-5 mb-5" />
                     <div className="flex items-center border-gray-100 border-b-2 font-bold text-gray-500 text-sm px-5">
                          <div onClick={() => setOpenListChat(true)} className={`relative pb-4 transition duration-300 ${openListChat ? "border-green-600 border-b-2 text-green-600" : "border-white border-b-2 hover:text-green-600"} cursor-pointer mr-6`}>
@@ -86,17 +93,17 @@ export default function ChatList() {
                               </div>
                          </div>
                     </div>
-                    {userFriend.length > 0 ? (
                          <Scrollbar>
-                              {openListChat ? userFriend
+                    {userFriend.length > 0 || group.length > 0 ? (
+                              openListChat ? userFriend
                                    .sort((a, b) => b.time - a.time)
                                    .map((item, index) => (
                                         <ChatItem key={index} openChatItem={openChatItem} chatArray={chatArray} accounts={item} currentUser={currentUser} dbRef={dbRef} />
-                                   )) : <div>Nhom</div>}
+                                   )) : group.map((item, index) => (<ChatItem key={index} openChatItem={openChatItem} group={item} />))
+                                   ) : (
+                                        <div className="mx-5">Không có cuộc trò chuyện nào</div>
+                                   )}
                          </Scrollbar>
-                    ) : (
-                         <div className="mx-5">Không có cuộc trò chuyện nào</div>
-                    )}
                </div>
           </div>
      );
