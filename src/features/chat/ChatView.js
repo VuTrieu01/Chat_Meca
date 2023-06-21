@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function ChatView() {
      const dataUserFriend = useStore((state) => state.dataUserFriend);
+     const dataGroup = useStore((state) => state.dataGroup);
      const [messenger, setMessenger] = useState();
      const dbRef = ref(database);
      const { currentUser } = useAuth();
@@ -32,15 +33,19 @@ export default function ChatView() {
                }
           });
      }, [dbRef]);
-     const userFriend = accounts.filter((val) => val.uid.includes(dataUserFriend.uid));
-     const chatArray = Object.values(messenger !== undefined && messenger)
+     const userFriend = dataUserFriend && accounts.filter((val) => val.uid.includes(dataUserFriend.uid));
+     const chatArray = dataUserFriend && Object.values(messenger !== undefined && messenger)
           .flatMap((obj) => Object.values(obj))
           .flatMap((obj) => Object.values(obj))
           .filter((val) => (val.accountId === currentUser.uid && val.accountFriendId.includes(dataUserFriend.uid)) || (val.accountId === dataUserFriend.uid && val.accountFriendId.includes(currentUser.uid)));
+     const chatGroup = dataGroup && Object.values(messenger !== undefined && messenger)
+          .flatMap((obj) => Object.values(obj))
+          .filter((val) => val.groupId === dataGroup.uid)
+     const memberGroup = dataGroup && accounts.filter((val) => val.uid !== currentUser.uid && chatGroup.map((val) => val.accountFriendId).includes(val.uid));
      return (
           <>
-               <Conversations userFriend={userFriend} currentUser={currentUser} dbRef={dbRef} chatArray={chatArray} />
-               <ConversationInfo userFriend={userFriend} />
+               <Conversations userFriend={userFriend} currentUser={currentUser} dbRef={dbRef} chatArray={chatArray} dataGroup={dataGroup} chatGroup={chatGroup} memberGroup={memberGroup}/>
+               <ConversationInfo userFriend={userFriend} currentUser={currentUser} accounts={accounts} dataGroup={dataGroup} />
           </>
      );
 }

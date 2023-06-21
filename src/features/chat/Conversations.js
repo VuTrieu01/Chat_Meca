@@ -15,7 +15,7 @@ import useStore from "../../zustand/store";
 import Picker from "emoji-picker-react";
 import './style.css';
 
-export default function Conversations({ userFriend, currentUser, dbRef, chatArray }) {
+export default function Conversations({ userFriend, currentUser, dbRef, chatArray, dataGroup, chatGroup, memberGroup }) {
      const uuid = uid();
      const messageEl = useRef(null);
      const [values, setValues] = useState("");
@@ -66,9 +66,30 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
           setActiveSidebar(0);
           setOpenChatItem(item.uid);
      };
+     const handleChatGroup = (item) => {
+          // chatArray.map((upItem) => {
+          //      if (upItem.accountId === item.uid && upItem.accountFriendId.includes(currentUser.uid) && upItem.newText === true) {
+          //           update(child(dbRef, `Chat/${item.uid}/${currentUser.uid}/${upItem.uid}`), {
+          //                newText: false,
+          //           });
+          //      }
+          //      return null;
+          // });
+          set(ref(database, `Chat/${item.uid}/${uuid}`), {
+               uid: uuid,
+               groupId: item.uid,
+               accountFriendId: currentUser.uid,
+               newText: true,
+               chat: values,
+               lastLoggedInTime: lastLoggedInTime.getTime(),
+          });
+          setValues("");
+          setActiveSidebar(0);
+          setOpenChatItem(item.uid);
+     };
      return (
           <div className="h-screen w-full">
-               {userFriend.map((item, index) => (
+               {!dataGroup && userFriend.map((item, index) => (
                     <div className="relative h-full w-full bg-gray-100" key={index}>
                          <div className="h-[10%] flex items-center justify-between bg-white p-3 border-gray-100 border-b-2">
                               <div className="flex items-center">
@@ -112,6 +133,40 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                          {showEmoji && <Picker onEmojiClick={handleEmojiClick} groupNames={groupName} />}
                     </div>
                ))}
+               {dataGroup &&
+                    <div className="relative h-full w-full bg-gray-100">
+                         <div className="h-[10%] flex items-center justify-between bg-white p-3 border-gray-100 border-b-2">
+                              <div className="flex items-center">
+                                   <div className="flex items-end">
+                                        <Avatar url={dataGroup.avatarURL} size="h-12 w-12" />
+                                   </div>
+
+                                   <div className="ml-1">
+                                        <p className="font-bold">
+                                             {dataGroup.name}
+                                        </p>
+                                   </div>
+                              </div>
+                              <div className="w-28 flex justify-between text-green-600 text-3xl">
+                                   <IoCall className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+                                   <BsFillCameraVideoFill className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+                                   <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+                              </div>
+                         </div>
+                         <Scrollbar messageEl={messageEl} sx="h-auto">
+                              <ChatContent memberGroup={memberGroup} chatGroup={chatGroup} currentUser={currentUser} />
+                         </Scrollbar>
+                         <div className=" absolute bottom-0 h-auto w-full flex items-center justify-center bg-white px-5 py-4 overflow-auto">
+                                   <BsEmojiSmile onClick={handleShowEmoji} className="text-2xl mr-2 cursor-pointer text-green-700 hover:text-green-500" />
+                              <textarea className="w-full h-12 overflow-auto p-3 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0 resize-none" placeholder="Aa" value={values}  onChange={handleChange}/>
+                              <div className="flex items-center pl-3 text-green-700">
+                                   <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+                                   {values.length > 0 && <IoSend className="text-xl cursor-pointer hover:text-green-500" onClick={() => handleChatGroup(dataGroup)} />}
+                              </div>
+                         </div>
+                         {showEmoji && <Picker onEmojiClick={handleEmojiClick} groupNames={groupName} />}
+                    </div>
+               }
           </div>
      );
 }

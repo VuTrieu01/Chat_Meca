@@ -5,6 +5,7 @@ const useStore = create((set) => ({
   activeContact: 0,
   openChat: false,
   dataUserFriend: {},
+  dataGroup: {},
   openChatItem: 0,
   setActiveSidebar: (activeSidebar) =>
     set(() => ({ activeSidebar: activeSidebar })),
@@ -14,6 +15,10 @@ const useStore = create((set) => ({
   addUserFriend: (newItem) =>
     set(() => ({
       dataUserFriend: newItem,
+    })),
+  addDataGroup: (newItem) =>
+    set(() => ({
+      dataGroup: newItem,
     })),
   setOpenChatItem: (openChatItem) =>
     set(() => ({ openChatItem: openChatItem })),

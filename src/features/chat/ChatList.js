@@ -15,7 +15,7 @@ export default function ChatList() {
      const [messenger, setMessenger] = useState([]);
      const [accounts, setAccounts] = useState([]);
      const [group, setGroup] = useState([]);
-     const [openListChat, setOpenListChat] = useState(true);
+     const [openListChat, setOpenListChat] = useState(0);
      const [openGroupForm, closeGroupForm] = useState("hidden");
      const openChatItem = useStore((state) => state.openChatItem);
      useEffect(() => {
@@ -69,7 +69,13 @@ export default function ChatList() {
                     time: chat ? chat.lastLoggedInTime : 0,
                };
           });
-     const countNewChat = accounts.filter((val) => chatArray.filter((val) => val.accountFriendId === currentUser.uid && val.newText === true).map((item) => item.accountId).includes(val.uid)).length;
+     const countNewChat = accounts.filter((val) =>
+          chatArray
+               .filter((val) => val.accountFriendId === currentUser.uid && val.newText === true)
+               .map((item) => item.accountId)
+               .includes(val.uid)
+     ).length;
+     const groupArray = group.filter((val) => val.memberId.includes(currentUser.uid) || val.leaderId === currentUser.uid);
      return (
           <div className="h-full border-gray-100 border-r-2">
                <div className="h-full w-[22rem] py-5">
@@ -77,33 +83,22 @@ export default function ChatList() {
                          <p className="font-bold text-2xl">Chat</p>
                          <AiOutlineUsergroupAdd title="Tạo nhóm" className="text-xl ml-10 cursor-pointer" onClick={() => closeGroupForm("")} />
                     </div>
-                    <GroupForm openGroupForm={openGroupForm} closeGroupForm={closeGroupForm} accounts={accounts} chatArray={chatArray} currentUser={currentUser}/>
+                    <GroupForm openGroupForm={openGroupForm} closeGroupForm={closeGroupForm} accounts={accounts} currentUser={currentUser} />
                     <SearchInput sx="mx-5 mb-5" />
                     <div className="flex items-center border-gray-100 border-b-2 font-bold text-gray-500 text-sm px-5">
-                         <div onClick={() => setOpenListChat(true)} className={`relative pb-4 transition duration-300 ${openListChat ? "border-green-600 border-b-2 text-green-600" : "border-white border-b-2 hover:text-green-600"} cursor-pointer mr-6`}>
+                         <div onClick={() => setOpenListChat(0)} className={`relative pb-4 transition duration-300 ${openListChat === 0 ? "border-green-600 border-b-2 text-green-600" : "border-white border-b-2 hover:text-green-600"} cursor-pointer mr-6`}>
                               Cá nhân
-                              {countNewChat > 0 && <div className="absolute -top-1 -right-4 h-4 w-4 p-1 flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs">
-                                   {countNewChat}
-                              </div>}
+                              {countNewChat > 0 && <div className="absolute -top-1 -right-4 h-4 w-4 p-1 flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs">{countNewChat}</div>}
                          </div>
-                         <div onClick={() => setOpenListChat(false)} className={`relative pb-4 transition duration-300 ${!openListChat ? "border-green-600 border-b-2 text-green-600" : "border-white border-b-2 hover:text-green-600"} cursor-pointer`}>
+                         <div onClick={() => setOpenListChat(1)} className={`relative pb-4 transition duration-300 ${openListChat === 1 ? "border-green-600 border-b-2 text-green-600" : "border-white border-b-2 hover:text-green-600"} cursor-pointer`}>
                               Nhóm
-                              <div className="absolute -top-1 -right-4 h-4 w-4 p-1 flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs">
-                                   1
-                              </div>
+                              <div className="absolute -top-1 -right-4 h-4 w-4 p-1 flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs">1</div>
                          </div>
                     </div>
-                         <Scrollbar>
-                    {userFriend.length > 0 || group.length > 0 ? (
-                              openListChat ? userFriend
-                                   .sort((a, b) => b.time - a.time)
-                                   .map((item, index) => (
-                                        <ChatItem key={index} openChatItem={openChatItem} chatArray={chatArray} accounts={item} currentUser={currentUser} dbRef={dbRef} />
-                                   )) : group.map((item, index) => (<ChatItem key={index} openChatItem={openChatItem} group={item} />))
-                                   ) : (
-                                        <div className="mx-5">Không có cuộc trò chuyện nào</div>
-                                   )}
-                         </Scrollbar>
+                    <Scrollbar>
+                         {userFriend.length > 0 && openListChat === 0 ? userFriend.sort((a, b) => b.time - a.time).map((item, index) => <ChatItem key={index} openChatItem={openChatItem} chatArray={chatArray} accounts={item} currentUser={currentUser} dbRef={dbRef} />) : openListChat === 1 ? "" : <div className="mx-5 my-5">Không có cuộc trò chuyện nào</div>}
+                         {groupArray.length > 0 && openListChat === 1 ? groupArray.map((item, index) => <ChatItem key={index} openChatItem={openChatItem} group={item} />) : openListChat === 0 ? "" : <div className="mx-5 my-5">Không có cuộc trò chuyện nào</div>}
+                    </Scrollbar>
                </div>
           </div>
      );

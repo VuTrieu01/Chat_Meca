@@ -7,6 +7,7 @@ import { ConvertNumberToTime } from "../../components/ConvertNumberToTime";
 
 export default function ChatItem({ openChatItem, chatArray, accounts, currentUser, dbRef, group }) {
      const addUserFriend = useStore((state) => state.addUserFriend);
+     const addDataGroup = useStore((state) => state.addDataGroup);
      const setOpenChat = useStore((state) => state.setOpenChat);
      const setOpenChatItem = useStore((state) => state.setOpenChatItem);
      const chatData = accounts && chatArray.filter((val) => (val.accountId === currentUser.uid && val.accountFriendId === accounts.uid) || (val.accountId === accounts.uid && val.accountFriendId === currentUser.uid)).sort((a, b) => b.lastLoggedInTime - a.lastLoggedInTime)[0];
@@ -22,18 +23,22 @@ export default function ChatItem({ openChatItem, chatArray, accounts, currentUse
                     return null;
                });
                setOpenChatItem(accounts.uid);
+               addDataGroup(undefined);
                addUserFriend(accounts);
                setOpenChat(true);
           }
           if (group) {
                setOpenChatItem(group.uid);
+               addDataGroup(group);
+               addUserFriend(undefined);
+               setOpenChat(true);
           }
      };
      return (
-          <div className={`w-full px-5 py-4 cursor-pointer ${accounts ? openChatItem === accounts.uid : openChatItem === group.uid? "bg-green-100" : "bg-white hover:bg-gray-100"}`} onClick={() => handleClick(accounts, group)}>
+          <div className={`w-full px-5 py-4 cursor-pointer ${accounts ? openChatItem === accounts.uid ? "bg-green-100" : "bg-white hover:bg-gray-100" : openChatItem === group.uid ? "bg-green-100" : "bg-white hover:bg-gray-100"}`} onClick={() => handleClick(accounts && accounts, group && group)}>
                <div className="flex items-center">
                     <div className="flex items-end">
-                         <Avatar url={accounts ? accounts.avatar : group.avatarURL} sx={`${accounts && !accounts.active ? "mr-2" : "mr-2"}`}/>
+                         <Avatar url={accounts ? accounts.avatar : group.avatarURL} sx={`${accounts && accounts.active ? "" : "mr-2"}`}/>
                          {accounts && accounts.active && <Ping sx="right-3" />}
                     </div>
                     <div className="w-full flex items-center justify-between">
