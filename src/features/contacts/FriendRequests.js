@@ -29,19 +29,29 @@ export default function FriendRequests({ currentUser, accounts, friends, getComm
                               <>
                                    <div className="w-full flex items-center py-4 px-6 border-gray-100 border-b-2">
                                         <div className="font-bold mr-1">Lời mời kết bạn({countFriends})</div>
-                                        {countFriends > 8 || openFriendRequests === "hidden" ? (
-                                             <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
-                                                  <IoMdArrowDropdown onClick={() => setFriendRequests("")} />
+                                        {countFriends < 8 ? (
+                                             openSendFriends === "hidden" ? (
+                                                  <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                       <IoMdArrowDropdown />
+                                                  </div>
+                                             ) : (
+                                                  <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                       <IoMdArrowDropup />
+                                                  </div>
+                                             )
+                                        ) : openSendFriends === "" ? (
+                                             <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                  <IoMdArrowDropup />
                                              </div>
                                         ) : (
-                                             <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
-                                                  <IoMdArrowDropup onClick={() => setFriendRequests("hidden")} />
+                                             <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                  <IoMdArrowDropdown />
                                              </div>
                                         )}
                                    </div>
-                                   <div className={`${countFriends > 8 || openFriendRequests === "hidden" ? openFriendRequests : ""} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
+                                   <div className={`${countFriends > 8 ? (openSendFriends === "hidden" ? "hidden" : "") : openSendFriends === "" ? "" : "hidden"} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
                                         {friendsArray.map((item, index) => (
-                                             <Request key={index} accounts={accounts} friends={item} getCommonFriendsCount={getCommonFriendsCount}/>
+                                             <Request key={index} accounts={accounts} friends={item} getCommonFriendsCount={getCommonFriendsCount} />
                                         ))}
                                    </div>
                               </>
@@ -55,19 +65,29 @@ export default function FriendRequests({ currentUser, accounts, friends, getComm
                               <div className="font-bold mr-1">Lời mời đã gửi({countSendFriends})</div>
                               {countSendFriends > 0 && (
                                    <>
-                                        {countSendFriends > 8 || openSendFriends === "hidden" ? (
-                                             <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
-                                                  <IoMdArrowDropdown onClick={() => setSendFriends("")} />
+                                        {countSendFriends < 8 ? (
+                                             openSendFriends === "hidden" ? (
+                                                  <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                       <IoMdArrowDropdown />
+                                                  </div>
+                                             ) : (
+                                                  <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                       <IoMdArrowDropup />
+                                                  </div>
+                                             )
+                                        ) : openSendFriends === "" ? (
+                                             <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                  <IoMdArrowDropup />
                                              </div>
                                         ) : (
-                                             <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
-                                                  <IoMdArrowDropup onClick={() => setSendFriends("hidden")} />
+                                             <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                  <IoMdArrowDropdown />
                                              </div>
                                         )}
                                    </>
                               )}
                          </div>
-                         <div className={`${countSendFriends > 8 || openSendFriends === "hidden" ? openSendFriends : ""} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
+                         <div className={`${countSendFriends > 8 ? (openSendFriends === "hidden" ? "hidden" : "") : openSendFriends === "" ? "" : "hidden"} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
                               {sendFriendsArray.map((item, index) => (
                                    <Request key={index} accounts={accounts} sendFriends={item} getCommonFriendsCount={getCommonFriendsCount} />
                               ))}

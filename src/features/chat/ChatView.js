@@ -10,6 +10,7 @@ export default function ChatView() {
      const dataUserFriend = useStore((state) => state.dataUserFriend);
      const dataGroup = useStore((state) => state.dataGroup);
      const [messenger, setMessenger] = useState();
+     const [openDetail, setOpenDetail] = useState(false);
      const dbRef = ref(database);
      const { currentUser } = useAuth();
      const [accounts, setAccounts] = useState([]);
@@ -44,8 +45,8 @@ export default function ChatView() {
      const memberGroup = dataGroup && accounts.filter((val) => val.uid !== currentUser.uid && chatGroup.map((val) => val.accountFriendId).includes(val.uid));
      return (
           <>
-               <Conversations userFriend={userFriend} currentUser={currentUser} dbRef={dbRef} chatArray={chatArray} dataGroup={dataGroup} chatGroup={chatGroup} memberGroup={memberGroup}/>
-               <ConversationInfo userFriend={userFriend} currentUser={currentUser} accounts={accounts} dataGroup={dataGroup} />
+               <Conversations userFriend={userFriend} currentUser={currentUser} dbRef={dbRef} chatArray={chatArray} dataGroup={dataGroup} chatGroup={chatGroup} memberGroup={memberGroup} openDetail={openDetail} setOpenDetail={setOpenDetail}/>
+               {openDetail && <ConversationInfo userFriend={userFriend} currentUser={currentUser} accounts={accounts} dataGroup={dataGroup} />}
           </>
      );
 }

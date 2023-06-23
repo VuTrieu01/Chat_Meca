@@ -5,7 +5,7 @@ import DateInput from "../../components/DateInput";
 import { database } from "../../firebase";
 import { child, ref, update } from "firebase/database";
 import Validation from "../../features/user/Validation";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiFillHome, AiOutlineEdit } from "react-icons/ai";
 import { IoAlertCircleSharp, IoCloseSharp } from "react-icons/io5";
 import { FaBirthdayCake } from "react-icons/fa";
 import { SlUserFemale, SlUser } from "react-icons/sl";
@@ -15,6 +15,7 @@ import Avatar from "../../components/Avatar";
 import TextFieldArea from "../../components/TextFieldArea";
 import UploadAvatar from "./UploadAvatar";
 import Scrollbar from "../../components/Scrollbar";
+import DropdownAddress from "../../components/DropdownAddress";
 
 const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
      const dbRef = ref(database);
@@ -26,6 +27,7 @@ const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
           gender: data.gender ? data.gender : "",
           bio: data.bio ? data.bio : "",
           dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : new Date(),
+          address: data.address ? data.address : "",
      });
      const [errors, setErrors] = useState({});
      const [edit, setEdit] = useState(true);
@@ -40,8 +42,11 @@ const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
      const handleDateOfBirth = (date, name) => {
           setValues({ ...values, [name]: date });
      };
+     const handleAddress = (address, name) => {
+          setValues({ ...values, [name]: address });
+     };
      const handleClose = () => {
-          setValues({ avatar: data ? data.avatar : "", coverPhoto: data ? data.coverPhoto : "", firstName: data ? data.firstName : "", lastName: data ? data.lastName : "", gender: data ? data.gender : "", bio: data ? data.bio : "", dateOfBirth: data ? new Date(data.dateOfBirth) : new Date() });
+          setValues({ avatar: data ? data.avatar : "", coverPhoto: data ? data.coverPhoto : "", firstName: data ? data.firstName : "", lastName: data ? data.lastName : "", gender: data ? data.gender : "", bio: data ? data.bio : "", dateOfBirth: data ? new Date(data.dateOfBirth) : new Date(), address: data ? data.address : "" });
           setEdit(true);
           setErrors({});
           closeUserForm();
@@ -64,6 +69,7 @@ const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
                          gender: values.gender,
                          bio: values.bio,
                          dateOfBirth: moment(values.dateOfBirth).startOf("day").toDate().toString(),
+                         address: values.address,
                     });
                     setEdit(true);
                     setErrors({});
@@ -106,55 +112,62 @@ const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
                                                   <pre className="font-sans text-sm">{values.bio}</pre>
                                              </div>
                                              <div className="flex items-start mb-1">
-                                                  <FaBirthdayCake className="mr-2 mt-1 text-green-600 "/>
+                                                  <FaBirthdayCake className="mr-2 mt-1 text-green-600 " />
                                                   <div>
                                                        <div>{moment(values.dateOfBirth).format("DD/MM/YYYY")}</div>
                                                        <div className="text-sm text-gray-700">Ngày sinh</div>
                                                   </div>
                                              </div>
                                              <div className="flex items-start mb-1">
-                                                  {values.gender === "Nam" ?  <SlUser className="mr-2 mt-1 text-green-600"/> :  <SlUserFemale className="mr-2 mt-1 text-green-600 "/>}
+                                                  {values.gender === "Nam" ? <SlUser className="mr-2 mt-1 text-green-600" /> : <SlUserFemale className="mr-2 mt-1 text-green-600 " />}
                                                   <div>
                                                        <div>{values.gender}</div>
                                                        <div className="text-sm text-gray-700">Giới tính</div>
                                                   </div>
                                              </div>
+                                                  <div className="flex items-start mb-1">
+                                                       <AiFillHome className="mr-2 mt-1 text-green-600 " />
+                                                       <div>
+                                                            <div>{values.address}</div>
+                                                            <div className="text-sm text-gray-700">Địa chỉ</div>
+                                                       </div>
+                                                  </div>
                                         </>
-                                        ):(
-                                             <>
-                                                  <div className="text-base font-bold mb-1">Chỉnh sửa phần giới thiệu</div>
-                                                  <div>
-                                                       {errors.lastName && (
-                                                            <div className="flex items-center text-red-500 text-sm mb-1">
-                                                                 <IoAlertCircleSharp className="text-lg" />
-                                                                 {errors.lastName}
-                                                            </div>
-                                                       )}
-                                                       <TextField type="text" placeholder="Họ" sx="w-80 md:w-full mb-2" name="lastName" error={errors.lastName ? "border-red-500" : ""} value={values.lastName} onChange={handleChange} disabled={edit ? true : false} />
-                                                  </div>
-                                                  <div>
-                                                       {errors.firstName && (
-                                                            <div className="flex items-center text-red-500 text-sm mb-1">
-                                                                 <IoAlertCircleSharp className="text-lg" />
-                                                                 {errors.firstName}
-                                                            </div>
-                                                       )}
-                                                       <TextField type="text" placeholder="Tên" sx="w-80 md:w-full mb-2" name="firstName" error={errors.firstName ? "border-red-500" : ""} value={values.firstName} onChange={handleChange} disabled={edit ? true : false} />
-                                                  </div>
-                                                  <TextFieldArea type="text" placeholder="Tiểu sử bản thân" sx="w-52 md:w-full mb-2" name="bio" value={values.bio} onChange={handleChange} disabled={edit ? true : false} />
-                                                  <div>
-                                                       {errors.dateOfBirth && (
-                                                            <div className="flex items-center text-red-500 text-sm mb-1">
-                                                                 <IoAlertCircleSharp className="text-lg" />
-                                                                 {errors.dateOfBirth}
-                                                            </div>
-                                                       )}
-                                                       <DateInput placeholder="Ngày sinh" sx="w-80 md:w-full mb-1" error={errors.dateOfBirth ? "border-red-500" : ""} selected={values.dateOfBirth} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateOfBirth(date, "dateOfBirth")} disabled={edit ? true : false} />
-                                                  </div>
-                                                  <RadioButton onChange={handleChange} name="gender" checked={values.gender} disabled={edit ? true : false} />
-                                             </>
-                                        )
-                                   }
+                                   ) : (
+                                        <>
+                                             <div className="text-base font-bold mb-1">Chỉnh sửa phần giới thiệu</div>
+                                             <div>
+                                                  {errors.lastName && (
+                                                       <div className="flex items-center text-red-500 text-sm mb-1">
+                                                            <IoAlertCircleSharp className="text-lg" />
+                                                            {errors.lastName}
+                                                       </div>
+                                                  )}
+                                                  <TextField type="text" placeholder="Họ" sx="w-80 md:w-full mb-2" name="lastName" error={errors.lastName ? "border-red-500" : ""} value={values.lastName} onChange={handleChange} disabled={edit ? true : false} />
+                                             </div>
+                                             <div>
+                                                  {errors.firstName && (
+                                                       <div className="flex items-center text-red-500 text-sm mb-1">
+                                                            <IoAlertCircleSharp className="text-lg" />
+                                                            {errors.firstName}
+                                                       </div>
+                                                  )}
+                                                  <TextField type="text" placeholder="Tên" sx="w-80 md:w-full mb-2" name="firstName" error={errors.firstName ? "border-red-500" : ""} value={values.firstName} onChange={handleChange} disabled={edit ? true : false} />
+                                             </div>
+                                             <TextFieldArea type="text" placeholder="Tiểu sử bản thân" sx="w-52 md:w-full mb-2" name="bio" value={values.bio} onChange={handleChange} disabled={edit ? true : false} />
+                                             <div>
+                                                  {errors.dateOfBirth && (
+                                                       <div className="flex items-center text-red-500 text-sm mb-1">
+                                                            <IoAlertCircleSharp className="text-lg" />
+                                                            {errors.dateOfBirth}
+                                                       </div>
+                                                  )}
+                                                  <DateInput placeholder="Ngày sinh" sx="w-80 md:w-full mb-1" error={errors.dateOfBirth ? "border-red-500" : ""} selected={values.dateOfBirth} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateOfBirth(date, "dateOfBirth")} disabled={edit ? true : false} />
+                                             </div>
+                                             <RadioButton onChange={handleChange} name="gender" checked={values.gender} disabled={edit ? true : false} />
+                                             <DropdownAddress onChange={handleAddress} />
+                                        </>
+                                   )}
                               </div>
                               <div className="flex justify-end">
                                    {!edit && (

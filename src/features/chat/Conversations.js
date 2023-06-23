@@ -15,7 +15,7 @@ import useStore from "../../zustand/store";
 import Picker from "emoji-picker-react";
 import './style.css';
 
-export default function Conversations({ userFriend, currentUser, dbRef, chatArray, dataGroup, chatGroup, memberGroup }) {
+export default function Conversations({ userFriend, currentUser, dbRef, chatArray, dataGroup, chatGroup, memberGroup, openDetail, setOpenDetail }) {
      const uuid = uid();
      const messageEl = useRef(null);
      const [values, setValues] = useState("");
@@ -44,6 +44,9 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
           let msg = values;
           msg += emoji.emoji;
           setValues(msg);
+     }
+     const handleDetail = () => {
+          setOpenDetail(!openDetail);
      }
      const handleChat = (item) => {
           chatArray.map((upItem) => {
@@ -116,7 +119,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                               <div className="w-28 flex justify-between text-green-600 text-3xl">
                                    <IoCall className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
                                    <BsFillCameraVideoFill className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
-                                   <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+                                   <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" onClick={handleDetail} />
                               </div>
                          </div>
                          <Scrollbar messageEl={messageEl} sx="h-auto">
@@ -150,7 +153,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                               <div className="w-28 flex justify-between text-green-600 text-3xl">
                                    <IoCall className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
                                    <BsFillCameraVideoFill className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
-                                   <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" />
+                                   <HiDotsCircleHorizontal className="cursor-pointer w-24 p-1 rounded-full hover:bg-gray-100" onClick={handleDetail} />
                               </div>
                          </div>
                          <Scrollbar messageEl={messageEl} sx="h-auto">

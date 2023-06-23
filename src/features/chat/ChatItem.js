@@ -5,12 +5,16 @@ import Ping from "../../components/Ping";
 import useStore from "../../zustand/store";
 import { ConvertNumberToTime } from "../../components/ConvertNumberToTime";
 
-export default function ChatItem({ openChatItem, chatArray, accounts, currentUser, dbRef, group }) {
+export default function ChatItem({ openChatItem, chatArray, accounts, currentUser, dbRef, group, messenger }) {
      const addUserFriend = useStore((state) => state.addUserFriend);
      const addDataGroup = useStore((state) => state.addDataGroup);
      const setOpenChat = useStore((state) => state.setOpenChat);
      const setOpenChatItem = useStore((state) => state.setOpenChatItem);
      const chatData = accounts && chatArray.filter((val) => (val.accountId === currentUser.uid && val.accountFriendId === accounts.uid) || (val.accountId === accounts.uid && val.accountFriendId === currentUser.uid)).sort((a, b) => b.lastLoggedInTime - a.lastLoggedInTime)[0];
+     const chatGroup = group && Object.values(messenger !== undefined && messenger)
+          .flatMap((obj) => Object.values(obj))
+          .filter((val) => val.groupId === group.uid)
+     const chatGroupData = group && chatGroup.sort((a, b) => b.lastLoggedInTime - a.lastLoggedInTime)[0];
      const countNewChat = accounts && chatArray.filter((val) => val.accountId === accounts.uid && val.accountFriendId === currentUser.uid && val.newText === true).length;
      const handleClick = (accounts, group) => {
           if (accounts) {
@@ -47,12 +51,16 @@ export default function ChatItem({ openChatItem, chatArray, accounts, currentUse
                                    {accounts && accounts.lastName + " " + accounts.firstName} {group && group.name}
                               </div>
                               <div className={`w-48 ${accounts && chatData.newText && chatData.accountId !== currentUser.uid ? " font-bold text-green-600" : ""} text-sm whitespace-nowrap overflow-hidden overflow-ellipsis`}>{accounts && chatData.chat}</div>
+                              {group && chatGroupData !== undefined && <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">{chatGroupData.chat}</div>}
                          </div>
                          {accounts && <div className="flex flex-col items-end">
                               <div className="text-gray-400 text-sm">{ConvertNumberToTime(chatData.lastLoggedInTime)}</div>
                               <div className={`${chatData.newText && chatData.accountId !== currentUser.uid ? "flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs" : ""} h-5 w-5 p-2`}>
                                    {chatData.newText && chatData.accountId !== currentUser.uid ? (countNewChat < 6 ? countNewChat : "+5") : ""}
                               </div>
+                         </div>}
+                         {group && chatGroupData !== undefined && <div className="flex flex-col items-end">
+                              <div className="text-gray-400 text-sm">{ConvertNumberToTime(chatGroupData.lastLoggedInTime)}</div>
                          </div>}
                     </div>
                </div>

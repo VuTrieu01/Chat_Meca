@@ -7,6 +7,7 @@ import Holidays from "date-holidays";
 import { child, onValue, ref } from "firebase/database";
 import { database } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
+import LoadingPage from "../../components/LoadingPage";
 
 const Calendar = () => {
   const [date, setDate] = useState(moment);
@@ -60,7 +61,7 @@ const Calendar = () => {
   };
   return (
     <div className="h-full w-full">
-      {loading && <p>Loading data...</p>}
+      {loading && <LoadingPage openLoading={loading}/>}
       {!loading && (
         <>
           <CalendarHeader

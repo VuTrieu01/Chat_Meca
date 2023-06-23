@@ -8,7 +8,7 @@ import { MdPersonRemove } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import useStore from "../../zustand/store";
 
-export default function Settings({ setOpen, openUserForm, sx, friends, setOpenMessenger }) {
+export default function Settings({ setOpen, openUserForm, sx, friends, group, setOpenMessenger }) {
      const dbRef = ref(database);
      const menuRef = useRef(null);
      const addUserFriend = useStore((state) => state.addUserFriend);
@@ -51,12 +51,12 @@ export default function Settings({ setOpen, openUserForm, sx, friends, setOpenMe
           <div ref={menuRef} className={`absolute ${sx ? sx : "top-[-4.3rem] left-8"} w-56 bg-white py-2 rounded-lg drop-shadow-2xl`}>
                <div className="flex items-center p-2 hover:bg-gray-100 cursor-pointer" onClick={handleOpenUserForm}>
                     <FaUser className="text-green-800" />
-                    <div className="ml-2">{friends ? "Xem thông tin" : "Thông tin tài khoản"}</div>
+                    <div className="ml-2">{friends || group ? "Xem thông tin" : "Thông tin tài khoản"}</div>
                </div>
-               {friends ? (
+               {friends || group ? (
                     <div className="flex items-center border-t-2 p-2 hover:bg-gray-100 cursor-pointer" onClick={handleDelete}>
                          <MdPersonRemove className="w-6 h-6 text-red-700" />
-                         <div className="ml-2 text-red-700">Xóa bạn</div>
+                         <div className="ml-2 text-red-700">{friends && "Xóa bạn"} {group && "Xóa thành viên"}</div>
                     </div>
                ) : (
                     <>

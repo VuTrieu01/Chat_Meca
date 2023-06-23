@@ -203,7 +203,7 @@ export default function ConversationInfo({ userFriend, currentUser, accounts, da
                                                        {item.uid !== currentUser.uid &&  (
                                                             <div onClick={() => openUserForm(index)} className="relative hover:bg-gray-200 p-1 rounded-full cursor-pointer">
                                                                  <BsThreeDots />
-                                                                 {open && id === index && <Settings setOpen={setOpen} openUserForm={() => setOpenUser("")} sx="right-1 -top-24 z-40" friends={item} setOpenMessenger={setOpenMessenger} />}
+                                                                 {open && id === index && <Settings setOpen={setOpen} openUserForm={() => setOpenUser("")} sx="right-1 -top-24 z-40" group setOpenMessenger={setOpenMessenger} />}
                                                             </div>
                                                        )}
                                                        {id === index && (

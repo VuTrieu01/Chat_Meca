@@ -42,7 +42,11 @@ const sidebarLinks = [
 export default function Sidebar() {
      const dbRef = ref(database);
      const [activeSidebar, setActiveSidebar] = useStore((state) => [state.activeSidebar, state.setActiveSidebar]);
+     const addUserFriend = useStore((state) => state.addUserFriend);
+     const addDataGroup = useStore((state) => state.addDataGroup);
      const setOpenChat = useStore((state) => state.setOpenChat);
+     const setOpenChatItem = useStore((state) => state.setOpenChatItem);
+     const setActiveContact = useStore((state) => state.setActiveContact);
      const [open, setOpen] = useState(false);
      const [openUser, setOpenUser] = useState("hidden");
      const { currentUser } = useAuth();
@@ -62,7 +66,11 @@ export default function Sidebar() {
      const handleChange = (item) => {
           if (item < 4) {
                setActiveSidebar(item);
+               setOpenChatItem(0);
+               addDataGroup(undefined);
+               addUserFriend(undefined);
                setOpenChat(false);
+               setActiveContact(0);
                setSetting(0);
                setOpen(false);
           } else {

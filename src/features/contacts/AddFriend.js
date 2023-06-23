@@ -10,12 +10,80 @@ import { database } from "../../firebase";
 import { AiOutlineSearch } from "react-icons/ai";
 import UserForm from "../user/UserForm";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import FriendSuggestions from "./FriendSuggestions";
+import moment from "moment";
 
-export default function AddFriend({ currentUser, accounts, friends, getCommonFriendsCount }) {
+const provinceMap = {
+     "An Giang": "AG",
+     "Bà Rịa - Vũng Tàu": "VT",
+     "Bắc Giang": "BG",
+     "Bắc Kạn": "BK",
+     "Bạc Liêu": "BL",
+     "Bắc Ninh": "BN",
+     "Bến Tre": "BT",
+     "Bình Định": "BD",
+     "Bình Dương": "BD",
+     "Bình Phước": "BP",
+     "Bình Thuận": "BTH",
+     "Cà Mau": "CM",
+     "Cần Thơ": "CT",
+     "Cao Bằng": "CB",
+     "Đà Nẵng": "DN",
+     "Đắk Lắk": "ĐL",
+     "Đắk Nông": "ĐN",
+     "Điện Biên": "ĐB",
+     "Đồng Nai": "ĐN",
+     "Đồng Tháp": "ĐT",
+     "Gia Lai": "GL",
+     "Hà Giang": "HG",
+     "Hà Nam": "HN",
+     "Hà Nội": "HN",
+     "Hà Tĩnh": "HT",
+     "Hải Dương": "HĐ",
+     "Hải Phòng": "HP",
+     "Hậu Giang": "HG",
+     "Hòa Bình": "HB",
+     "Hưng Yên": "HY",
+     "Khánh Hòa": "KH",
+     "Kiên Giang": "KG",
+     "Kon Tum": "KT",
+     "Lai Châu": "LC",
+     "Lâm Đồng": "LD",
+     "Lạng Sơn": "LS",
+     "Lào Cai": "LC",
+     "Long An": "LA",
+     "Nam Định": "ND",
+     "Nghệ An": "NA",
+     "Ninh Bình": "NB",
+     "Ninh Thuận": "NT",
+     "Phú Thọ": "PT",
+     "Phú Yên": "PY",
+     "Quảng Bình": "QB",
+     "Quảng Nam": "QN",
+     "Quảng Ngãi": "QNg",
+     "Quảng Ninh": "QNi",
+     "Quảng Trị": "QT",
+     "Sóc Trăng": "ST",
+     "Sơn La": "SL",
+     "Tây Ninh": "TN",
+     "Thái Bình": "TB",
+     "Thái Nguyên": "TN",
+     "Thanh Hóa": "TH",
+     "Thừa Thiên Huế": "TTH",
+     "Tiền Giang": "TG",
+     "TP. Hồ Chí Minh": "HCM",
+     "Trà Vinh": "TV",
+     "Tuyên Quang": "TQ",
+     "Vĩnh Long": "VL",
+     "Vĩnh Phúc": "VP",
+     "Yên Bái": "YB",
+};
+export default function AddFriend({ currentUser, accounts, friends, getCommonFriendsCount, getDataFriends }) {
      const uuid = uid();
      const [search, setSearch] = useState("");
      const [openUser, setOpenUser] = useState("hidden");
-     const [openSendFriends, setSendFriends] = useState("");
+     const [openFriendSuggestions, setOpenFriendSuggestions] = useState("hidden");
+     const [openSendFriends, setSendFriends] = useState("hidden");
      const [id, setId] = useState(-1);
      const openUserForm = (id) => {
           setId(id);
@@ -24,17 +92,67 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
      const closeUserForm = () => {
           setOpenUser("hidden");
      };
+     const openFriendSuggestionsForm = (id) => {
+          setId(id);
+          setOpenFriendSuggestions("");
+     };
+     const closeFriendSuggestions = () => {
+          setOpenFriendSuggestions("hidden");
+     };
      const friendsArray = Object.values(friends)
           .flatMap((obj) => Object.values(obj))
           .filter((val) => val.accountId === currentUser.uid || val.accountFriendId === currentUser.uid);
-     const user = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) 
-                    && !friendsArray.map((item) => item.accountId).includes(val.uid));
-     const friendSuggestions = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) 
-                              && !friendsArray.map((item) => item.accountId).includes(val.uid) && getCommonFriendsCount(val.uid) > 0);
+     const user = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) && !friendsArray.map((item) => item.accountId).includes(val.uid));
+     const friendSuggestions = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) && !friendsArray.map((item) => item.accountId).includes(val.uid) && getCommonFriendsCount(val.uid) > 0);
+     const friendSuggestionsByDetail = accounts.filter((val) => val.uid !== currentUser.uid && !friendsArray.map((item) => item.accountFriendId).includes(val.uid) && !friendsArray.map((item) => item.accountId).includes(val.uid));
      const searchData = search !== "" && user.filter((val) => (val.lastName + " " + val.firstName).toLowerCase().includes(search.toLowerCase()));
      const handleChange = (e) => {
           if (e.target) setSearch(e.target.value);
      };
+     // Tính toán độ tương đồng giữa hai người dùng
+     const calculateSimilarity = (user1, user2) => {
+          let count = 0;
+          if (provinceMap[user1.address] === provinceMap[user2.address]) {
+               count++;
+          }
+          if ((user1.gender === "Nam" && user2.gender === "Nữ") || (user1.gender === "Nữ" && user2.gender === "Nam")) {
+               count++;
+          }
+          if (moment(user1.dateOfBirth).format("YYYY") === moment(user2.dateOfBirth).format("YYYY")) {
+               count++;
+          }
+          return count;
+     };
+
+     // Đề xuất những người dùng có địa chỉ tương đồng nhất với người dùng được chỉ định
+     const recommendFriends = (userId, data) => {
+          const user = accounts.find((user) => user.uid === userId);
+          const similarities = data
+               .filter((it) => it.uid !== userId)
+               .map((item) => ({
+                    uid: item.uid,
+                    similarity: calculateSimilarity(user, item),
+               }))
+               .sort((a, b) => b.similarity - a.similarity);
+          return similarities;
+     };
+
+     const recommendedFriends = recommendFriends(currentUser.uid, friendSuggestionsByDetail);
+     const friendSuggestionsAll = accounts
+          .filter(
+               (val) =>
+                    recommendedFriends
+                         .filter((it) => it.similarity > 0)
+                         .map((it) => it.uid)
+                         .includes(val.uid) && !friendSuggestions.map((item) => item.uid).includes(val.uid)
+          )
+          .map((ite) => {
+               const sortFriends = recommendedFriends.filter((it) => it.similarity > 0 && it.uid === ite.uid)[0];
+               return {
+                    ...ite,
+                    sortFriends: sortFriends ? sortFriends.similarity : 0,
+               };
+          });
      const handleAddFriend = (item) => {
           try {
                set(ref(database, `Friends/${currentUser.uid}/${uuid}`), {
@@ -73,34 +191,51 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                         <div>Tìm kiếm bạn bè</div>
                                    </div>
                                    <div className="flex items-center w-full pb-4 border-gray-100 border-b-2">
-                                        <div className="font-bold mr-1">Gợi ý kết bạn({friendSuggestions.length})</div>
-                                        {friendSuggestions.length > 0 && (
+                                        <div className="font-bold mr-1">Gợi ý kết bạn({friendSuggestions.length + friendSuggestionsAll.length})</div>
+                                        {friendSuggestions.length + friendSuggestionsAll.length > 0 && (
                                              <>
-                                                  {friendSuggestions.length > 8 || openSendFriends === "hidden" ? (
-                                                       <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
-                                                            <IoMdArrowDropdown onClick={() => setSendFriends("")} />
+                                                  {friendSuggestions.length + friendSuggestionsAll.length < 8 ? (
+                                                       openSendFriends === "hidden" ? (
+                                                            <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                                 <IoMdArrowDropdown />
+                                                            </div>
+                                                       ) : (
+                                                            <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                                 <IoMdArrowDropup />
+                                                            </div>
+                                                       )
+                                                  ) : openSendFriends === "" ? (
+                                                       <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                            <IoMdArrowDropup />
                                                        </div>
                                                   ) : (
-                                                       <div className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
-                                                            <IoMdArrowDropup onClick={() => setSendFriends("hidden")} />
+                                                       <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                            <IoMdArrowDropdown />
                                                        </div>
                                                   )}
                                              </>
                                         )}
                                    </div>
-                                   <div className={`${friendSuggestions.length > 8 || openSendFriends === "hidden" ? openSendFriends : ""} grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
+                                   <div className={`${friendSuggestions.length + friendSuggestionsAll.length > 8 ? (openSendFriends === "hidden" ? "hidden" : "") : openSendFriends === "" ? "" : "hidden"} grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
                                         {friendSuggestions.map((item, index) => {
                                              const count = getCommonFriendsCount(item.uid);
                                              return (
                                                   <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
                                                        <div className="flex">
                                                             <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(index)} />
-                                                            {id === index && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />}
+                                                            {id === index && (
+                                                                 <>
+                                                                      <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />
+                                                                      <FriendSuggestions openFriendSuggestions={openFriendSuggestions} closeFriendSuggestions={closeFriendSuggestions} data={item} getDataFriends={getDataFriends} accounts={accounts} />
+                                                                 </>
+                                                            )}
                                                             <div className="ml-2">
                                                                  <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                                                       {item.lastName} {item.firstName}
                                                                  </p>
-                                                                 <p className="mb-1">{count} bạn chung</p>
+                                                                 <p className="mb-1 text-sm cursor-pointer hover:text-blue-500 hover:underline" onClick={() => openFriendSuggestionsForm(index)}>
+                                                                      {count} bạn chung
+                                                                 </p>
                                                             </div>
                                                        </div>
                                                        <div className="flex justify-end w-full">
@@ -111,6 +246,25 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                                   </div>
                                              );
                                         })}
+                                        {friendSuggestionsAll.map((item, index) => (
+                                             <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
+                                                  <div className="flex">
+                                                       <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(item.uid)} />
+                                                       {id === item.uid && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />}
+                                                       <div className="ml-2">
+                                                            <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                                                 {item.lastName} {item.firstName}
+                                                            </p>
+                                                            <p className="mb-1 text-sm text-gray-500">Có thể bạn quen</p>
+                                                       </div>
+                                                  </div>
+                                                  <div className="flex justify-end w-full">
+                                                       <Button sx="mr-2 bg-green-500 hover:bg-green-600" onClick={() => handleAddFriend(item)}>
+                                                            Kết bạn
+                                                       </Button>
+                                                  </div>
+                                             </div>
+                                        ))}
                                    </div>
                               </>
                          ) : searchData.length === 0 ? (

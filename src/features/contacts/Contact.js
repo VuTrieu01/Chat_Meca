@@ -62,6 +62,15 @@ export default function Contact() {
           }
           return count;
      };
+     const getDataFriends = (userId1) => {
+          const friends1 = userMap[userId1];
+          const friends2 = userMap[currentUser.uid];
+          let dataFriends = [];
+          if (friends1 !== undefined) {
+               dataFriends = [...friends1.filter((val) => friends2.includes(val))];
+          }
+          return dataFriends;
+     };
      return (
           <div className="h-screen w-full">
                <div className="h-full w-full flex">
@@ -69,7 +78,7 @@ export default function Contact() {
                     {activeContact === 0 ? openChat ? <ChatView /> 
                     : <FriendsList currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} /> 
                     : activeContact === 1 ? <FriendRequests currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} /> 
-                    : <AddFriend currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} />}
+                    : <AddFriend currentUser={currentUser} accounts={accounts} friends={friends} getCommonFriendsCount={getCommonFriendsCount} getDataFriends={getDataFriends}/>}
                </div>
           </div>
      );

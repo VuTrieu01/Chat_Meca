@@ -6,7 +6,7 @@ export default function ChatContent({ userFriend, chatArray, currentUser, member
   const chatData = chatArray && chatArray.sort((a, b) => a.lastLoggedInTime - b.lastLoggedInTime);
   const chatDataGroup = chatGroup && chatGroup.sort((a, b) => a.lastLoggedInTime - b.lastLoggedInTime);
   const getAvatarMember = (id) => {
-    return memberGroup.find((val) => val.uid === id).avatar;
+    return chatGroup && memberGroup.find((val) => val.uid === id).avatar;
   }
   return (
     <>

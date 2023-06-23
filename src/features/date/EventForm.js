@@ -94,6 +94,7 @@ const EventForm = ({ title, editEvent, deleteItem, open, closeButton, dataEvent 
      return (
           <div>
                <div className={`fixed ${open} z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60`}></div>
+               <MessengerBox data={dataEvent} openMessenger={openMessenger} closeMessenger={setOpenMessenger} />
                <div className={`fixed ${open} z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 bg-white rounded-md px-8 py-6 drop-shadow-lg`}>
                     <div className="flex justify-end">
                          {edit && (
@@ -106,7 +107,6 @@ const EventForm = ({ title, editEvent, deleteItem, open, closeButton, dataEvent 
                                    <div title="Xóa" className="cursor-pointer hover:bg-gray-200 p-2 rounded-full" onClick={handleDelete}>
                                         <AiOutlineDelete />
                                    </div>
-                                   <MessengerBox data={dataEvent} openMessenger={openMessenger} closeMessenger={setOpenMessenger} />
                               </>
                          )}
                          <div className="cursor-pointer hover:bg-gray-200 p-2 rounded-full" onClick={handleClose}>

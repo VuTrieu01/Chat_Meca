@@ -12,6 +12,7 @@ import { database } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
 import moment from "moment";
 import LoadingPage from "../../components/LoadingPage";
+import DropdownAddress from "../../components/DropdownAddress";
 
 export default function Register() {
      const [isVisible, setVisible] = useState(false);
@@ -24,6 +25,7 @@ export default function Register() {
           passwordConfirm: "",
           dateOfBirth: new Date(),
           gender: "Nữ",
+          address: "",
      });
      const [errors, setErrors] = useState({});
      const [error, setError] = useState("");
@@ -43,6 +45,9 @@ export default function Register() {
      };
      const handleDateOfBirth = (date, name) => {
           setValues({ ...values, [name]: date });
+     };
+     const handleAddress = (address, name) => {
+          setValues({ ...values, [name]: address });
      };
      useEffect(() => {
           onValue(child(dbRef, `Account`), (snapshot) => {
@@ -75,6 +80,7 @@ export default function Register() {
                                    email: values.email,
                                    dateOfBirth: moment(values.dateOfBirth).format("YYYY-MM-DD"),
                                    gender: values.gender,
+                                   address: values.address,
                               })
                                    .then(() => {
                                         setLoading("hidden")
@@ -160,6 +166,7 @@ export default function Register() {
                                              </div>
                                         )}
                                         <DateInput placeholder="Ngày sinh" sx="w-80 md:w-full mb-3" error={errors.dateOfBirth ? "border-red-500" : ""} selected={values.dateOfBirth} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateOfBirth(date, "dateOfBirth")} />
+                                        <DropdownAddress onChange={handleAddress}/>
                                         <RadioButton onChange={handleChange} name="gender" checked={values.gender} />
                                         <Button type={true} sx="w-80 md:w-full mb-4 bg-gradient-to-r from-[#0097B2] to-[#7ED957] hover:opacity-95">
                                              Đăng ký
