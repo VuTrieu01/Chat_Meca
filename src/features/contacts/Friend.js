@@ -41,7 +41,7 @@ export default function Friend({ accounts, friends, currentUser, userArray, getC
                                         <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                              {item.lastName} {item.firstName}
                                         </p>
-                                        <p className="mb-1">{count} bạn chung</p>
+                                        {count > 0 && <p className="mb-1">{count} bạn chung</p>}
                                    </div>
                               </div>
                               <div onClick={() => openUserForm(index)} className="relative hover:bg-gray-200 p-1 rounded-full cursor-pointer">
