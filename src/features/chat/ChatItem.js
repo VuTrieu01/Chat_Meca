@@ -50,8 +50,8 @@ export default function ChatItem({ openChatItem, chatArray, accounts, currentUse
                               <div className="w-48 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                    {accounts && accounts.lastName + " " + accounts.firstName} {group && group.name}
                               </div>
-                              <div className={`w-48 ${accounts && chatData.newText && chatData.accountId !== currentUser.uid ? " font-bold text-green-600" : ""} text-sm whitespace-nowrap overflow-hidden overflow-ellipsis`}>{accounts && chatData.chat}</div>
-                              {group && chatGroupData !== undefined && <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">{chatGroupData.chat}</div>}
+                              <div className={`w-48 ${accounts && chatData.newText && chatData.accountId !== currentUser.uid ? " font-bold text-green-600" : ""} text-sm whitespace-nowrap overflow-hidden overflow-ellipsis`}>{accounts && chatData.chat && chatData.chat} {accounts && chatData.img && "Đã gửi một ảnh"}</div>
+                              {group && chatGroupData !== undefined && <div className="w-48 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis">{chatGroupData.chat && chatGroupData.chat} {chatGroupData.img && "Đã gửi một ảnh"}</div>}
                          </div>
                          {accounts && <div className="flex flex-col items-end">
                               <div className="text-gray-400 text-sm">{ConvertNumberToTime(chatData.lastLoggedInTime)}</div>
