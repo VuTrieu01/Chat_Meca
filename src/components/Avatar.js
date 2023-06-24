@@ -5,13 +5,15 @@ export default function Avatar(props) {
   return (
     <div className={`${props.sx}`} title={props.title} onClick={props.onClick}>
       {props.url ? (
-        <img
-          className={`inline-block rounded-full ${
-            props.size ? `${props.size}` : " w-12"
-          } ring-2 ring-white`}
-          src={props.url}
-          alt=""
-        />
+        <div className={`rounded-full ${props.size && props.size}`}>
+          <img
+            className={`inline-block rounded-full ${
+              props.size ? `${props.size}` : "w-12"
+            } "w-12" ring-2 ring-white`}
+            src={props.url}
+            alt=""
+          />
+        </div>
       ) : (
         <FaUserAlt
           className={`${

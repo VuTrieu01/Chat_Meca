@@ -30,26 +30,26 @@ export default function FriendRequests({ currentUser, accounts, friends, getComm
                                    <div className="w-full flex items-center py-4 px-6 border-gray-100 border-b-2">
                                         <div className="font-bold mr-1">Lời mời kết bạn({countFriends})</div>
                                         {countFriends < 8 ? (
-                                             openSendFriends === "hidden" ? (
-                                                  <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                             openFriendRequests === "hidden" ? (
+                                                  <div onClick={() => setFriendRequests("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
                                                        <IoMdArrowDropdown />
                                                   </div>
                                              ) : (
-                                                  <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                                  <div onClick={() => setFriendRequests("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
                                                        <IoMdArrowDropup />
                                                   </div>
                                              )
-                                        ) : openSendFriends === "" ? (
-                                             <div onClick={() => setSendFriends("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                        ) : openFriendRequests === "" ? (
+                                             <div onClick={() => setFriendRequests("hidden")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
                                                   <IoMdArrowDropup />
                                              </div>
                                         ) : (
-                                             <div onClick={() => setSendFriends("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
+                                             <div onClick={() => setFriendRequests("")} className="cursor-pointer hover:bg-gray-200 p-1 rounded-full">
                                                   <IoMdArrowDropdown />
                                              </div>
                                         )}
                                    </div>
-                                   <div className={`${countFriends > 8 ? (openSendFriends === "hidden" ? "hidden" : "") : openSendFriends === "" ? "" : "hidden"} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
+                                   <div className={`${countFriends > 8 ? (openFriendRequests === "hidden" ? "hidden" : "") : openFriendRequests === "" ? "" : "hidden"} px-5 grid-cols-1 grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4`}>
                                         {friendsArray.map((item, index) => (
                                              <Request key={index} accounts={accounts} friends={item} getCommonFriendsCount={getCommonFriendsCount} />
                                         ))}

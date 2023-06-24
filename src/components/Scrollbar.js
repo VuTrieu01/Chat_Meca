@@ -7,8 +7,9 @@ export default function Scrollbar(props) {
         const { currentTarget: target } = event;
         target.scroll({ top: target.scrollHeight, behavior: "smooth" });
       });
+      props.messageEl.current.scroll({ top: props.messageEl.current.scrollHeight, behavior: "smooth" })
     }
-  }, []);
+  }, [props.messageEl]);
   return (
     <div
       className={`${

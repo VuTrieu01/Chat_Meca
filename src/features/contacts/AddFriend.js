@@ -225,7 +225,7 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                                             <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(index)} />
                                                             {id === index && (
                                                                  <>
-                                                                      <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />
+                                                                      <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} />
                                                                       <FriendSuggestions openFriendSuggestions={openFriendSuggestions} closeFriendSuggestions={closeFriendSuggestions} data={item} getDataFriends={getDataFriends} accounts={accounts} />
                                                                  </>
                                                             )}
@@ -250,7 +250,7 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                              <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
                                                   <div className="flex">
                                                        <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(item.uid)} />
-                                                       {id === item.uid && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />}
+                                                       {id === item.uid && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} />}
                                                        <div className="ml-2">
                                                             <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                                                  {item.lastName} {item.firstName}
@@ -280,7 +280,7 @@ export default function AddFriend({ currentUser, accounts, friends, getCommonFri
                                              <div className="w-full bg-white px-5 py-4 rounded-md" key={index}>
                                                   <div className="flex">
                                                        <Avatar url={item.avatar} size="h-12 w-12" sx="cursor-pointer" onClick={() => openUserForm(index)} />
-                                                       {id === index && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} editUser />}
+                                                       {id === index && <UserForm openUser={openUser} closeUserForm={closeUserForm} data={item} />}
                                                        <div className="flex flex-col justify-center ml-2">
                                                             <p className="w-36 font-bold whitespace-nowrap overflow-hidden overflow-ellipsis">
                                                                  {item.lastName} {item.firstName}

@@ -109,7 +109,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                                              <p>Đang hoạt động</p>
                                         ) : (
                                              <div className="flex">
-                                                  <div className="mr-1">Hoạt động:</div>
+                                                  <div className="mr-1">Hoạt động</div>
                                                   <OfflineTimeCounter lastLoggedInTime={item.lastLoggedInTime} />
                                                   <div className="ml-1">trước</div>
                                              </div>
@@ -129,7 +129,10 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                                    <BsEmojiSmile onClick={handleShowEmoji} className="text-2xl mr-2 cursor-pointer text-green-700 hover:text-green-500" />
                               <textarea className="w-full h-12 overflow-auto p-3 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0 resize-none" placeholder="Aa" value={values}  onChange={handleChange}/>
                               <div className="flex items-center pl-3 text-green-700">
-                                   <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+                              <input type="file" accept="image/png, image/jpeg" className="hidden" id="add-img"/>
+                                   <label htmlFor="add-img">
+                                        <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+                                   </label>
                                    {values.length > 0 && <IoSend className="text-xl cursor-pointer hover:text-green-500" onClick={() => handleChat(item)} />}
                               </div>
                          </div>
@@ -163,7 +166,10 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                                    <BsEmojiSmile onClick={handleShowEmoji} className="text-2xl mr-2 cursor-pointer text-green-700 hover:text-green-500" />
                               <textarea className="w-full h-12 overflow-auto p-3 text-sm rounded-lg border-2 border-gray-100 bg-gray-100 focus:border-2 focus:border-green-600 focus:outline-0 resize-none" placeholder="Aa" value={values}  onChange={handleChange}/>
                               <div className="flex items-center pl-3 text-green-700">
-                                   <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+                                   <input type="file" accept="image/png, image/jpeg" className="hidden" id="add-img"/>
+                                   <label htmlFor="add-img">
+                                        <BiImageAdd className="text-2xl mr-2 cursor-pointer hover:text-green-500" />
+                                   </label>
                                    {values.length > 0 && <IoSend className="text-xl cursor-pointer hover:text-green-500" onClick={() => handleChatGroup(dataGroup)} />}
                               </div>
                          </div>
