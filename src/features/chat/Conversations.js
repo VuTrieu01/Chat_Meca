@@ -97,6 +97,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
           setOpenChatItem(item.uid);
      };
      const handleChatGroup = (item) => {
+     const memberIdGroup = dataGroup.leaderId !== currentUser.uid ? [dataGroup.leaderId, ...dataGroup.memberId.filter((it) => it !== currentUser.uid)] : [...dataGroup.memberId.filter((it) => it !== currentUser.uid)]
           // chatArray.map((upItem) => {
           //      if (upItem.accountId === item.uid && upItem.accountFriendId.includes(currentUser.uid) && upItem.newText === true) {
           //           update(child(dbRef, `Chat/${item.uid}/${currentUser.uid}/${upItem.uid}`), {
@@ -119,7 +120,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                                    uid: uuid,
                                    groupId: item.uid,
                                    accountFriendId: currentUser.uid,
-                                   newText: true,
+                                   unReadUser: memberIdGroup,
                                    img: downloadURL,
                                    lastLoggedInTime: lastLoggedInTime.getTime(),
                               });
@@ -131,7 +132,7 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
                     uid: uuid,
                     groupId: item.uid,
                     accountFriendId: currentUser.uid,
-                    newText: true,
+                    unReadUser: memberIdGroup,
                     chat: values,
                     lastLoggedInTime: lastLoggedInTime.getTime(),
                });

@@ -91,6 +91,13 @@ export default function ChatList() {
                     time: chat ? chat.lastLoggedInTime : 0,
                };
            });
+     const countReadUser = groupArray.filter((it) => {
+          const chatGroup = Object.values(messenger)
+          .flatMap((obj) => Object.values(obj))
+          .filter((val) => val.groupId === it.uid && val.unReadUser.find((ite) => ite === currentUser.uid))
+          .map((item) => item.groupId);
+          return chatGroup.length > 0 ? chatGroup : null;
+     }).length;
      return (
           <div className="h-full border-gray-100 border-r-2">
                <LoadingPage openLoading={loading}/>
@@ -108,12 +115,12 @@ export default function ChatList() {
                          </div>
                          <div onClick={() => setOpenListChat(1)} className={`relative pb-4 transition duration-300 ${openListChat === 1 ? "border-green-600 border-b-2 text-green-600" : "border-white border-b-2 hover:text-green-600"} cursor-pointer`}>
                               Nhóm
-                              {/* <div className="absolute -top-1 -right-4 h-4 w-4 p-1 flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs">1</div> */}
+                              {countReadUser > 0 && <div className="absolute -top-1 -right-4 h-4 w-4 p-1 flex items-center justify-center bg-red-600 text-white font-bold rounded-full text-xs">{countReadUser}</div>}
                          </div>
                     </div>
                     <Scrollbar>
                          {userFriend.length > 0 && openListChat === 0 ? userFriend.sort((a, b) => b.time - a.time).map((item, index) => <ChatItem key={index} openChatItem={openChatItem} chatArray={chatArray} accounts={item} currentUser={currentUser} dbRef={dbRef} />) : openListChat === 1 ? "" : <div className="mx-5 my-5">Không có cuộc trò chuyện nào</div>}
-                         {groupArray.length > 0 && openListChat === 1 ? groupArray.sort((a, b) => b.time - a.time).map((item, index) => <ChatItem key={index} openChatItem={openChatItem} group={item} messenger={messenger}/>) : openListChat === 0 ? "" : <div className="mx-5 my-5">Không có cuộc trò chuyện nào</div>}
+                         {groupArray.length > 0 && openListChat === 1 ? groupArray.sort((a, b) => b.time - a.time).map((item, index) => <ChatItem key={index} openChatItem={openChatItem} group={item} messenger={messenger} currentUser={currentUser} dbRef={dbRef} />) : openListChat === 0 ? "" : <div className="mx-5 my-5">Không có cuộc trò chuyện nào</div>}
                     </Scrollbar>
                </div>
           </div>
