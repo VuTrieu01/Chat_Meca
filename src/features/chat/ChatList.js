@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 import useStore from "../../zustand/store";
 import GroupForm from "../group/GroupForm";
 import LoadingPage from "../../components/LoadingPage";
+import Favicon from 'react-favicon'
 
 export default function ChatList() {
      const dbRef = ref(database);
@@ -16,43 +17,11 @@ export default function ChatList() {
      const [messenger, setMessenger] = useState([]);
      const [accounts, setAccounts] = useState([]);
      const [group, setGroup] = useState([]);
+     const [notifications, setNotifications] = useState(0);
      const [loading, setLoading] = useState("hidden");
      const [openListChat, setOpenListChat] = useState(0);
      const [openGroupForm, closeGroupForm] = useState("hidden");
      const openChatItem = useStore((state) => state.openChatItem);
-     useEffect(() => {
-          setLoading();
-          onValue(child(dbRef, `Account`), (snapshot) => {
-               setAccounts([]);
-               const data = snapshot.val();
-               if (data !== null) {
-                    Object.values(data).map((item) => {
-                         setLoading("hidden")
-                         return setAccounts((oldArray) => [...oldArray, item]);
-                    });
-               }
-          });
-          onValue(child(dbRef, `Chat`), (snapshot) => {
-               setMessenger([]);
-               const data = snapshot.val();
-               if (data !== null) {
-                    Object.values(data).map((item) => {
-                         setLoading("hidden")
-                         return setMessenger((oldArray) => [...oldArray, item]);
-                    });
-               }
-          });
-          onValue(child(dbRef, `Group`), (snapshot) => {
-               setGroup([]);
-               const data = snapshot.val();
-               if (data !== null) {
-                    Object.values(data).map((item) => {
-                         setLoading("hidden")
-                         return setGroup((oldArray) => [...oldArray, item]);
-                    });
-               }
-          });
-     }, [dbRef]);
      const chatArray = Object.values(messenger)
           .flatMap((obj) => Object.values(obj))
           .flatMap((obj) => Object.values(obj));
@@ -81,26 +50,72 @@ export default function ChatList() {
                .map((item) => item.accountId)
                .includes(val.uid)
      ).length;
-     const groupArray = group.filter((val) => val.memberId.includes(currentUser.uid) || val.leaderId === currentUser.uid)
-           .map((it) => {
+     const groupArray = group
+          .filter((val) => val.memberId.includes(currentUser.uid) || val.leaderId === currentUser.uid)
+          .map((it) => {
                const chat = Object.values(messenger)
-               .flatMap((obj) => Object.values(obj))
-               .filter((val) => val.groupId === it.uid).sort((a, b) => b.lastLoggedInTime - a.lastLoggedInTime)[0]
+                    .flatMap((obj) => Object.values(obj))
+                    .filter((val) => val.groupId === it.uid)
+                    .sort((a, b) => b.lastLoggedInTime - a.lastLoggedInTime)[0];
                return {
                     ...it,
                     time: chat ? chat.lastLoggedInTime : 0,
                };
-           });
+          });
      const countReadUser = groupArray.filter((it) => {
           const chatGroup = Object.values(messenger)
-          .flatMap((obj) => Object.values(obj))
-          .filter((val) => val.groupId === it.uid && val.unReadUser.find((ite) => ite === currentUser.uid))
-          .map((item) => item.groupId);
+               .flatMap((obj) => Object.values(obj))
+               .filter((val) => val.groupId === it.uid && val.unReadUser.find((ite) => ite === currentUser.uid))
+               .map((item) => item.groupId);
           return chatGroup.length > 0 ? chatGroup : null;
      }).length;
+     useEffect(() => {
+          setLoading();
+          setNotifications(countNewChat + countReadUser);
+          onValue(child(dbRef, `Account`), (snapshot) => {
+               setAccounts([]);
+               const data = snapshot.val();
+               if (data !== null) {
+                    Object.values(data).map((item) => {
+                         setLoading("hidden");
+                         return setAccounts((oldArray) => [...oldArray, item]);
+                    });
+               }
+          });
+          onValue(child(dbRef, `Chat`), (snapshot) => {
+               setMessenger([]);
+               const data = snapshot.val();
+               if (data !== null) {
+                    Object.values(data).map((item) => {
+                         setLoading("hidden");
+                         return setMessenger((oldArray) => [...oldArray, item]);
+                    });
+               }
+          });
+          onValue(child(dbRef, `Group`), (snapshot) => {
+               setGroup([]);
+               const data = snapshot.val();
+               if (data !== null) {
+                    Object.values(data).map((item) => {
+                         setLoading("hidden");
+                         return setGroup((oldArray) => [...oldArray, item]);
+                    });
+               }
+          });
+          // Thay đổi tiêu đề trang web khi có thông báo mới
+          // document.title = notifications > 0 ? `Meca - Bạn có ${notifications} tin nhắn mới` : "Meca";
+          // const notificationElement = document.querySelector("title");
+          // if (notifications > 0) {
+          //      notificationElement.classList.add("animate-pulse");
+          // } else {
+          //      notificationElement.classList.remove("animate-pulse");
+          // }
+     }, [dbRef, notifications, countNewChat, countReadUser]);
      return (
+          <>
+          <Favicon url="favicon.ico" alertCount={notifications} iconSize={50}/>
           <div className="h-full border-gray-100 border-r-2">
-               <LoadingPage openLoading={loading}/>
+               <LoadingPage openLoading={loading} />
                <div className="h-full w-[22rem] py-5">
                     <div className="flex items-center justify-between mx-5 mb-5">
                          <p className="font-bold text-2xl">Chat</p>
@@ -124,5 +139,6 @@ export default function ChatList() {
                     </Scrollbar>
                </div>
           </div>
+          </>
      );
 }

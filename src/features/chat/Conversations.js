@@ -52,13 +52,10 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
           setOpenDetail(!openDetail);
      };
      const handleChat = (item) => {
-          chatArray.map((upItem) => {
-               if (upItem.accountId === item.uid && upItem.accountFriendId.includes(currentUser.uid) && upItem.newText === true) {
-                    update(child(dbRef, `Chat/${item.uid}/${currentUser.uid}/${upItem.uid}`), {
-                         newText: false,
-                    });
-               }
-               return null;
+          chatArray.filter((it) => it.accountId === item.uid && it.accountFriendId.includes(currentUser.uid) && it.newText === true).map((upItem) => {
+               return update(child(dbRef, `Chat/${item.uid}/${currentUser.uid}/${upItem.uid}`), {
+                    newText: false,
+               });;
           });
           if (file.current.files[0] !== undefined) {
                const img = file.current.files[0];
@@ -98,14 +95,13 @@ export default function Conversations({ userFriend, currentUser, dbRef, chatArra
      };
      const handleChatGroup = (item) => {
      const memberIdGroup = dataGroup.leaderId !== currentUser.uid ? [dataGroup.leaderId, ...dataGroup.memberId.filter((it) => it !== currentUser.uid)] : [...dataGroup.memberId.filter((it) => it !== currentUser.uid)]
-          // chatArray.map((upItem) => {
-          //      if (upItem.accountId === item.uid && upItem.accountFriendId.includes(currentUser.uid) && upItem.newText === true) {
-          //           update(child(dbRef, `Chat/${item.uid}/${currentUser.uid}/${upItem.uid}`), {
-          //                newText: false,
-          //           });
-          //      }
-          //      return null;
-          // });
+          chatGroup
+          .filter((it) => it.groupId === dataGroup.uid)
+          .map((upItem) => {
+               return update(child(dbRef, `Chat/${upItem.groupId}/${upItem.uid}`), {
+                    unReadUser: upItem.unReadUser.filter((ite) => ite !== currentUser.uid),
+               });
+          });
           if (file.current.files[0] !== undefined) {
                const img = file.current.files[0];
                const storageRef = refImg(storage, uuidImg);

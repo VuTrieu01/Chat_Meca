@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AiOutlineBell, AiOutlineFileText, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineFileText, AiOutlineSearch } from "react-icons/ai";
 import { BiUserCircle } from "react-icons/bi";
 import { BsImages, BsThreeDots } from "react-icons/bs";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
