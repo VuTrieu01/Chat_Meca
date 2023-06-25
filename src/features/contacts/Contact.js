@@ -53,7 +53,7 @@ export default function Contact() {
           const friends1 = userMap[userId1];
           const friends2 = userMap[currentUser.uid];
           let count = 0;
-          if (friends1 !== undefined) {
+          if (friends1 !== undefined && friends2 !== undefined) {
                friends1.forEach((friendId) => {
                     if (friends2.includes(friendId)) {
                          count++;

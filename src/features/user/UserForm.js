@@ -165,7 +165,7 @@ const UserForm = ({ openUser, closeUserForm, data, editUser }) => {
                                                   <DateInput placeholder="Ngày sinh" sx="w-80 md:w-full mb-1" error={errors.dateOfBirth ? "border-red-500" : ""} selected={values.dateOfBirth} dateFormat="dd/MM/yyyy" onChange={(date) => handleDateOfBirth(date, "dateOfBirth")} disabled={edit ? true : false} />
                                              </div>
                                              <RadioButton onChange={handleChange} name="gender" checked={values.gender} disabled={edit ? true : false} />
-                                             <DropdownAddress onChange={handleAddress} />
+                                             <DropdownAddress onChange={handleAddress} value={values.address} />
                                         </>
                                    )}
                               </div>

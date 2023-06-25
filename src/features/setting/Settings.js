@@ -12,6 +12,7 @@ export default function Settings({ setOpen, openUserForm, sx, friends, group, se
      const dbRef = ref(database);
      const menuRef = useRef(null);
      const addUserFriend = useStore((state) => state.addUserFriend);
+     const setActiveSidebar = useStore((state) => state.setActiveSidebar);
      const { logOut, currentUser } = useAuth();
      const lastLoggedInTime = new Date();
      const handleOpenUserForm = () => {
@@ -29,6 +30,7 @@ export default function Settings({ setOpen, openUserForm, sx, friends, group, se
           try {
                addUserFriend({});
                await logOut();
+               setActiveSidebar(0)
           } catch (e) {
                console.log(e);
           }

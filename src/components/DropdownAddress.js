@@ -81,7 +81,7 @@ const DropdownAddress = (props) => {
         onChange={handleChange}
         className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
       >
-        <option value="">Chọn tỉnh/thành phố</option>
+        {props.value ? <option value={props.value}>{props.value}</option> : <option value="">Chọn tỉnh/thành phố</option>}
         {provinces.map((province) => (
           <option key={province} value={province}>
             {province}
