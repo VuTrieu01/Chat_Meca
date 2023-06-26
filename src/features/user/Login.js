@@ -51,7 +51,7 @@ export default function Login() {
         <div className="flex h-full flex-wrap justify-center">
           <div className="flex items-center justify-center w-2/5">
             <img
-              src="favicon.ico"
+              src="https://firebasestorage.googleapis.com/v0/b/meca-9b48b.appspot.com/o/Meca.png?alt=media&token=1e9775df-d503-4bf0-b737-e9392066bb3a"
               className="w-full md:w-1/2"
               alt="logo meca"
             />

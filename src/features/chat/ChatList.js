@@ -9,8 +9,8 @@ import { useAuth } from "../../context/AuthContext";
 import useStore from "../../zustand/store";
 import GroupForm from "../group/GroupForm";
 import LoadingPage from "../../components/LoadingPage";
-import Favicon from 'react-favicon'
-
+import Favicon from 'react-favicon';
+import logo from '../../assets/Meca.png';
 export default function ChatList() {
      const dbRef = ref(database);
      const { currentUser } = useAuth();
@@ -113,7 +113,7 @@ export default function ChatList() {
      }, [dbRef, notifications, countNewChat, countReadUser]);
      return (
           <>
-          <Favicon url="favicon.ico" alertCount={notifications} iconSize={50}/>
+          <Favicon url={logo} alertCount={notifications} iconSize={50}/>
           <div className="h-full border-gray-100 border-r-2">
                <LoadingPage openLoading={loading} />
                <div className="h-full w-[22rem] py-5">
