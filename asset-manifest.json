@@ -1,13 +1,14 @@
 {
   "files": {
     "main.css": "./static/css/main.83699f19.css",
-    "main.js": "./static/js/main.faed2ce6.js",
+    "main.js": "./static/js/main.fe773831.js",
+    "static/media/Meca.png": "./static/media/Meca.a2c864fda084e694f0d9.png",
     "index.html": "./index.html",
     "main.83699f19.css.map": "./static/css/main.83699f19.css.map",
-    "main.faed2ce6.js.map": "./static/js/main.faed2ce6.js.map"
+    "main.fe773831.js.map": "./static/js/main.fe773831.js.map"
   },
   "entrypoints": [
     "static/css/main.83699f19.css",
-    "static/js/main.faed2ce6.js"
+    "static/js/main.fe773831.js"
   ]
 }
